@@ -7,6 +7,10 @@ import javax.inject.Inject
 class MainRepository @Inject constructor(){
 
    suspend fun requestQueryAll(): List<LoggerEntity> {
-      return DatabaseManager.db.loggerDao.queryAllLoggers();
+      return DatabaseManager.db.loggerDao.queryAllLoggers()
+   }
+
+   suspend fun requestQueryLevel():List<String>{
+      return DatabaseManager.db.loggerDao.queryAllLevel()
    }
 }

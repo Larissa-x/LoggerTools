@@ -20,6 +20,7 @@
             app:title="标题"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
         <Button
             android:id="@+id/btn_insert"
             android:layout_marginTop="50dp"
@@ -31,7 +32,7 @@
 
         <Button
             android:id="@+id/btn_query"
-            android:text="查询数据"
+            android:text="查询数据并打印"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:layout_width="match_parent"

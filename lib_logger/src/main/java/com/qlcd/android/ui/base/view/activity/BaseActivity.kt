@@ -1,4 +1,5 @@
 package com.qlcd.android.ui.base.view.activity
+
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -187,7 +188,6 @@ abstract class BaseActivity :
             .keyboardEnable(true)
             .init()
     }
-
 
 
     override fun onDestroy() {

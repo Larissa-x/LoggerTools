@@ -1,15 +1,14 @@
 package com.qlcd.android.loggertools
 
-import android.view.View
-import com.blankj.utilcode.util.GsonUtils
-import com.qlcd.android.ui.logger.LogKit
 import androidx.activity.viewModels
-import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.GsonUtils
 import com.hjq.bar.OnTitleBarListener
 import com.hjq.bar.TitleBar
 import com.qlcd.android.loggertools.databinding.ActivityMainBinding
 import com.qlcd.android.ui.base.view.activity.BaseActivity
+import com.qlcd.android.ui.logger.LogKit
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
@@ -28,7 +27,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initEvent(){
-
         _binding.tbTitle.setOnTitleBarListener(object :OnTitleBarListener{
             override fun onLeftClick(titleBar: TitleBar?) {
                 super.onLeftClick(titleBar)
@@ -45,8 +43,9 @@ class MainActivity : BaseActivity() {
             hashMap["name"] = "小明"
             hashMapOf["data"] = hashMap
 
-            val toJson = GsonUtils.toJson(hashMapOf);
+            val toJson = GsonUtils.toJson(hashMapOf)
             LogKit.json(toJson)
+
         }
 
         _binding.btnQuery.setOnClickListener {

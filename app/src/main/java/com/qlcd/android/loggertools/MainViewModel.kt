@@ -15,8 +15,9 @@ class MainViewModel @Inject constructor(
 
     fun requestQuery(){
         viewModelScope.launch {
+            val requestQueryLevel = repository.requestQueryLevel()
             val requestQueryAll = repository.requestQueryAll()
-            LogUtils.json(GsonUtils.toJson(requestQueryAll))
+            LogUtils.json(requestQueryLevel)
         }
     }
 

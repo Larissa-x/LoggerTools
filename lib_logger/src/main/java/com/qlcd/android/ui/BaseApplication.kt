@@ -2,18 +2,14 @@ package com.qlcd.android.ui
 
 import android.app.Application
 import com.alibaba.android.arouter.launcher.ARouter
-import com.qlcd.android.ui.logger.ReleaseLogTree
 import com.qlcd.loggertools.manager.DatabaseManager
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import timber.log.Timber
-import javax.inject.Inject
 
 open class BaseApplication : Application() {
 
     init {
-        initTimber()
         initARouter()
         initSmartRefreshLayout()
         DatabaseManager.saveApplication(this)
@@ -30,18 +26,6 @@ open class BaseApplication : Application() {
             ClassicsFooter(
                 context
             ).setDrawableSize(20f)
-        }
-    }
-
-
-    /**
-     * 初始化Timber(Log工具)
-     */
-    private fun initTimber() {
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        } else {
-            Timber.plant(ReleaseLogTree())
         }
     }
 
