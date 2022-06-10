@@ -1,10 +1,17 @@
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+//        maven { url 'https://maven.aliyun.com/repository/google'}
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url "https://maven.aliyun.com/nexus/content/repositories/releases" }
+        maven { url 'https://www.jitpack.io' }
+        maven { url 'https://repo1.maven.org/maven2/' }
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
+        //jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "日志工具"
 include ':app'
+include ':lib_sqlite'
+include ':lib_logger'

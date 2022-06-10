@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/loading"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:background="@drawable/bg_dialog_round_10"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:padding="10dp">
+
+    <com.qlcd.android.ui.base.view.loading.ZLoadingView
+        android:id="@+id/z_loading_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter"/>
+
+    <com.qlcd.android.ui.base.view.loading.ZLoadingTextView
+        android:id="@+id/z_text_view"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/z_custom_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:lines="1"
+        android:visibility="gone"/>
+
+</LinearLayout>
