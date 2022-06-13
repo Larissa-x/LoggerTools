@@ -1,6 +1,6 @@
 package com.qlcd.android.loggertools
 
-import com.qlcd.android.ui.manager.DatabaseManager
+import com.qlcd.loggertools.manager.DatabaseManager
 import javax.inject.Inject
 
 class MainRepository @Inject constructor() {
