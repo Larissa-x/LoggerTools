@@ -1,4 +1,4 @@
-package com.qlcd.loggertools.manager
+package com.qlcd.android.ui.manager
 
 import android.app.Application
 import androidx.room.Room
@@ -26,7 +26,7 @@ object DatabaseManager {
         override fun onCreate(db: SupportSQLiteDatabase) {
             //在新装app时会调用，调用时机为数据库build()之后，数据库升级时不调用此函数
             MIGRATIONS.map {
-                it.migrate(db)
+                Migration1.migrate(db)
             }
         }
     }

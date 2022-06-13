@@ -1,16 +1,14 @@
 package com.qlcd.android.ui.logger
 
 import android.util.Log
-import com.qlcd.loggertools.dao.LoggerDao
-import com.qlcd.loggertools.db.LoggerDatabase
-import com.qlcd.loggertools.entity.LoggerEntity
-import com.qlcd.loggertools.manager.DatabaseManager
+import com.qlcd.android.ui.dao.LoggerDao
+import com.qlcd.android.ui.entity.LoggerEntity
+import com.qlcd.android.ui.manager.DatabaseManager
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import javax.inject.Inject
 
 /** * Created by Tony Shen on 2017/1/2. */
 object LogKit {

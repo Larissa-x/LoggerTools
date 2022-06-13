@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(
 //            val requestQueryLevel = repository.requestQueryLevel()
 //            val requestQueryAll = repository.requestQueryAll()
 //            val requestQueryAll = repository.requestQueryAll()
-            val requestQuery = repository.requestQuery("json")
+            val requestQuery = repository.requestQuery(time = "2022-6-13",level = "debug",fileName = "MainActivity.kt")
 
             LogUtils.json(requestQuery)
         }

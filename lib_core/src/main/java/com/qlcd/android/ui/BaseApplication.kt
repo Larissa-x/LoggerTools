@@ -2,7 +2,7 @@ package com.qlcd.android.ui
 
 import android.app.Application
 import com.alibaba.android.arouter.launcher.ARouter
-import com.qlcd.loggertools.manager.DatabaseManager
+import com.qlcd.android.ui.manager.DatabaseManager
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout

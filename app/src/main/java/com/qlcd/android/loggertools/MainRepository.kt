@@ -1,13 +1,13 @@
 package com.qlcd.android.loggertools
 
-//import com.qlcd.loggertools.entity.LoggerEntity
-//import com.qlcd.loggertools.manager.DatabaseManager
-import com.qlcd.loggertools.manager.DatabaseManager
+//import com.qlcd.android.ui.entity.LoggerEntity
+//import com.qlcd.android.ui.manager.DatabaseManager
+import com.qlcd.android.ui.manager.DatabaseManager
 import javax.inject.Inject
 
 class MainRepository @Inject constructor() {
 
-//    suspend fun requestQueryAll(): List<LoggerEntity> {
+    //    suspend fun requestQueryAll(): List<LoggerEntity> {
 //        return DatabaseManager.db.loggerDao.queryAllLoggers()
 //    }
 //
@@ -19,7 +19,8 @@ class MainRepository @Inject constructor() {
         level: String? = null,
         fileName: String? = null,
         time: String? = null,
+        sort: String? = "DESC",
         page: Int = 1,
         pageNum: Int = 10,
-    ) = DatabaseManager.db.loggerDao.query(level, fileName, time, page, pageNum)
+    ) = DatabaseManager.db.loggerDao.query(level, fileName, time, sort, page, pageNum)
 }
