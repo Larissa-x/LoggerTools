@@ -72,7 +72,7 @@ ext{
             //Retrofit
 //            Retrofit               : "com.squareup.retrofit2:retrofit:${version["RetrofitVersion"]}",
 //            RetrofitMoshi          : "com.squareup.retrofit2:converter-moshi:${version["RetrofitVersion"]}",
-//            OkHttp3                : "com.squareup.okhttp3:okhttp:${version["OkHttp3Version"]}",
+            OkHttp3                : "com.squareup.okhttp3:okhttp:${version["OkHttp3Version"]}",
 //            OkHttp3Log             : "com.squareup.okhttp3:logging-interceptor:${version["OkHttp3Version"]}",
 
             //解析
