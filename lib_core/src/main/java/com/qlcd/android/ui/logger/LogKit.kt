@@ -1,8 +1,8 @@
 package com.qlcd.android.ui.logger
 
 import android.util.Log
-import com.qlcd.android.ui.dao.LoggerDao
-import com.qlcd.android.ui.entity.LoggerEntity
+import com.qlcd.android.ui.database.dao.LoggerDao
+import com.qlcd.android.ui.database.entity.LoggerEntity
 import com.qlcd.android.ui.manager.DatabaseManager
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

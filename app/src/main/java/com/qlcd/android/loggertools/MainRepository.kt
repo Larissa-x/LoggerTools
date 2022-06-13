@@ -1,7 +1,5 @@
 package com.qlcd.android.loggertools
 
-//import com.qlcd.android.ui.entity.LoggerEntity
-//import com.qlcd.android.ui.manager.DatabaseManager
 import com.qlcd.android.ui.manager.DatabaseManager
 import javax.inject.Inject
 

@@ -1,8 +1,7 @@
-package com.qlcd.android.ui.entity
+package com.qlcd.android.ui.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 
 @Entity(tableName = "logger_table")
 data class LoggerEntity(

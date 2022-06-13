@@ -1,4 +1,4 @@
-package com.qlcd.android.ui.dao
+package com.qlcd.android.ui.database.dao
 
 import android.text.TextUtils
 import androidx.room.Dao
@@ -10,7 +10,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.qlcd.android.ui.logger.LogKit
-import com.qlcd.android.ui.entity.LoggerEntity
+import com.qlcd.android.ui.database.entity.LoggerEntity
 import java.util.*
 
 const val everyday = 1 * 24 * 60 * 60 * 1000
