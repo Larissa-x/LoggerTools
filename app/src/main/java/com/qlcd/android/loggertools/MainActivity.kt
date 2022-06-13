@@ -4,18 +4,19 @@ import androidx.activity.viewModels
 import com.blankj.utilcode.util.GsonUtils
 import com.hjq.bar.OnTitleBarListener
 import com.hjq.bar.TitleBar
-import com.qlcd.android.loggertools.databinding.ActivityMainBinding
+import com.qlcd.android.loggertools.databinding.ActivityTestBinding
 import com.qlcd.android.ui.base.view.activity.BaseActivity
 import com.qlcd.android.ui.logger.LogKit
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
-    private val _binding: ActivityMainBinding by binding()
+    private val _binding: ActivityTestBinding by binding()
     private val _viewModel: MainViewModel by viewModels()
-    override fun bindLayout() = R.layout.activity_main
+    override fun bindLayout(): Int {
+        return R.layout.activity_test
+    }
     override fun bindBaseViewModel() = _viewModel
     override fun bindViews() {
         _binding.viewModel = _viewModel
@@ -44,7 +45,7 @@ class MainActivity : BaseActivity() {
             hashMapOf["data"] = hashMap
 
             val toJson = GsonUtils.toJson(hashMapOf)
-            LogKit.json(toJson)
+            LogKit.d(toJson)
 
         }
 

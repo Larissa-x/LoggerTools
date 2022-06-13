@@ -2,7 +2,7 @@
 apply from: "config.gradle"
 apply plugin: 'com.alibaba.arouter'
 buildscript {
-    ext.kotlin_version = "1.5.21"
+    ext.kotlin_version = "1.5.30"
     ext.hilt_version = '2.38.1'
 
     repositories {

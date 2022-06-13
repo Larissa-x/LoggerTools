@@ -5,6 +5,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.qlcd.loggertools.entity.LoggerEntity
 
 const val everyday = 1 * 24 * 60 * 60 * 1000
@@ -53,5 +55,25 @@ interface LoggerDao {
         pageNum: Int = 10,
     ): List<LoggerEntity>
 
+    @RawQuery
+    suspend fun queryAllLoggersByDesc(query: SupportSQLiteQuery): List<LoggerEntity>
 
+
+    suspend fun query(
+        level: String? = null,
+        fileName: String? = null,
+        time: String? = null,
+        page: Int = 1,
+        pageNum: Int = 10,
+    ): List<LoggerEntity> {
+        val buffer = StringBuffer("SELECT * FROM logger_table ")
+
+        if (!TextUtils.isEmpty(level) || !TextUtils.isEmpty(fileName) || !TextUtils.isEmpty(time)) {
+            buffer.append("WHERE ")
+        }
+        if (!TextUtils.isEmpty(level)) {
+            buffer.append("level='${level}'")
+        }
+        return queryAllLoggersByDesc(SimpleSQLiteQuery(buffer.toString()))
+    }
 }
