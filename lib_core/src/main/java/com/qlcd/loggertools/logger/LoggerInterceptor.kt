@@ -19,12 +19,11 @@ class LoggerInterceptor : Interceptor {
         val jsonObject = JSONObject()
         val requestJson = JSONObject()
         requestJson.put("method",request.method)
-        requestJson.put("url",request.url.toUri().toString() + request.url.encodedPath.replace("\\",""))
+        requestJson.put("url",request.url.toUri().toString() + request.url.encodedPath)
         requestJson.put("header",request.headers)
         jsonObject.put("request",requestJson)
         jsonObject.put("response",content)
-        LogKit.d(jsonObject.toString())
+        LogKit.json(jsonObject.toString())
         return response.newBuilder().body(content?.toResponseBody(mediaType)).build()
     }
-
 }

@@ -13,7 +13,6 @@ import com.qlcd.loggertools.logger.LogKit
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import java.util.*
 
-const val everyday = 1 * 24 * 60 * 60 * 1000
 
 @Dao
 interface LoggerDao {
@@ -33,6 +32,11 @@ interface LoggerDao {
     @Query(value = "SELECT DISTINCT level FROM logger_table")
     suspend fun queryAllLevel(): List<String>
 
+    /**
+     * 查询logger_table所有文件名字
+     */
+    @Query(value = "SELECT DISTINCT fileName FROM logger_table")
+    suspend fun queryAllFileNames(): List<String>
 
     @RawQuery
     suspend fun customQueryAllLoggers(query: SupportSQLiteQuery): List<LoggerEntity>
@@ -46,8 +50,8 @@ interface LoggerDao {
         fileName: String? = null,
         time: String? = null,
         sort: String? = "DESC",
-        page: Int = 1,
-        pageNum: Int = 10,
+//        page: Int = 1,//去掉分页逻辑
+//        pageNum: Int = 10,//去掉分页逻辑
     ): List<LoggerEntity> {
         val buffer = StringBuffer("SELECT * FROM logger_table")
 
@@ -93,7 +97,9 @@ interface LoggerDao {
             buffer.append("fileName='${fileName}'")
         }
         buffer.append(" ORDER BY time ASC ")
-        buffer.append("LIMIT ${(page-1)*pageNum},${pageNum}")
+
+        //去掉分页逻辑
+//        buffer.append("LIMIT ${(page-1)*pageNum},${pageNum}")
 
         LogUtils.d(buffer.toString())
         return customQueryAllLoggers(SimpleSQLiteQuery(buffer.toString()))
