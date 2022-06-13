@@ -1,9 +1,8 @@
 package com.qlcd.android.loggertools
 
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
-import com.qlcd.android.ui.base.viewmodel.BaseViewModel
+import com.qlcd.loggertools.base.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

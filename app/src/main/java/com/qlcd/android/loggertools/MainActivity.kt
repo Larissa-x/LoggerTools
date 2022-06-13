@@ -5,8 +5,8 @@ import com.blankj.utilcode.util.GsonUtils
 import com.hjq.bar.OnTitleBarListener
 import com.hjq.bar.TitleBar
 import com.qlcd.android.loggertools.databinding.ActivityTestBinding
-import com.qlcd.android.ui.base.view.activity.BaseActivity
-import com.qlcd.android.ui.logger.LogKit
+import com.qlcd.loggertools.base.view.activity.BaseActivity
+import com.qlcd.loggertools.logger.LogKit
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

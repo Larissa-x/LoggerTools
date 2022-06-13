@@ -1,6 +1,6 @@
 package com.qlcd.android.loggertools
 
-import com.qlcd.android.ui.BaseApplication
+import com.qlcd.loggertools.BaseApplication
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

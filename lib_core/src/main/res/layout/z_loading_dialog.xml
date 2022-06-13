@@ -10,14 +10,14 @@
               android:orientation="vertical"
               android:padding="10dp">
 
-    <com.qlcd.android.ui.base.view.loading.ZLoadingView
+    <com.qlcd.loggertools.base.view.loading.ZLoadingView
         android:id="@+id/z_loading_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="@string/app_name"
         android:scaleType="fitCenter"/>
 
-    <com.qlcd.android.ui.base.view.loading.ZLoadingTextView
+    <com.qlcd.loggertools.base.view.loading.ZLoadingTextView
         android:id="@+id/z_text_view"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
