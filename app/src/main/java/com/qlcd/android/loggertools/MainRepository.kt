@@ -1,14 +1,11 @@
 package com.qlcd.android.loggertools
 
-import com.blankj.utilcode.util.LogUtils
 import com.qlcd.loggertools.logger.LoggerInterceptor
 import com.qlcd.loggertools.manager.DatabaseManager
-import kotlinx.coroutines.Dispatchers
 import okhttp3.*
 import java.io.IOException
-import javax.inject.Inject
 
-class MainRepository @Inject constructor() {
+class MainRepository {
 
     //    suspend fun requestQueryAll(): List<LoggerEntity> {
 //        return DatabaseManager.db.loggerDao.queryAllLoggers()

@@ -1,8 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.alibaba.arouter'
-apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'kotlin-parcelize'
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -15,12 +13,7 @@ android {
         versionName rootProject.ext.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += [AROUTER_MODULE_NAME: project.getName(),
-                              "room.schemaLocation":project.getName()]
-            }
-        }
+
     }
     buildFeatures {
         //databinding

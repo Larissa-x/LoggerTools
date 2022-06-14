@@ -16,15 +16,33 @@
         android:layout_height="match_parent"
         android:background="@color/app_color_white">
 
-        <com.hjq.bar.TitleBar
+        <RelativeLayout
             android:id="@+id/tb_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:leftIcon="@mipmap/app_ic_close"
-            app:lineVisible="false"
-            app:rightIcon="@mipmap/app_ic_filter"
-            app:title="Logger" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@color/app_color_white"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <ImageView
+                android:paddingStart="14dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/app_ic_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="Logger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:paddingEnd="14dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/app_ic_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/block_search"

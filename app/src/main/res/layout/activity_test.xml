@@ -15,11 +15,6 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <com.hjq.bar.TitleBar
-            android:id="@+id/tb_title"
-            app:title="标题"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/btn_insert"

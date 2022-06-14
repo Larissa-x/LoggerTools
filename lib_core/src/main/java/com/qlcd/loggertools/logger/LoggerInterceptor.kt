@@ -1,5 +1,7 @@
 package com.qlcd.loggertools.logger
 
+import com.google.gson.JsonArray
+import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -25,25 +27,50 @@ class LoggerInterceptor : Interceptor {
         val responseJson = JSONObject(content)
         val tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)
 
-        responseJson.put("responseDuration",tookMs)
-        jsonObject.put("request",formatRequestJson(request))
-        jsonObject.put("response",responseJson)
+        responseJson.put("responseDuration", tookMs)
+        jsonObject.put("request", formatRequestJson(request))
+        jsonObject.put("response", responseJson)
         LogKit.json(jsonObject.toString())
         return response.newBuilder().body(content?.toResponseBody(mediaType)).build()
     }
 
-    private fun formatRequestJson(request:Request):JSONObject{
+    private fun formatRequestJson(request: Request): JSONObject {
         val requestJson = JSONObject()
-        requestJson.put("method",request.method)
-        requestJson.put("url",request.url.toUri().toString() + request.url.encodedPath)
+        requestJson.put("method", request.method)
+        requestJson.put("url", request.url.toUri().toString() + request.url.encodedPath)
         val jsonArray = JSONArray()
         val names = request.headers.names()
         names.forEach {
             val jsonObject = JSONObject()
-            jsonObject.put(it,request.headers[it])
+            jsonObject.put(it, request.headers[it])
             jsonArray.put(jsonObject)
         }
-        requestJson.put("header",jsonArray)
+
+        val dataJson = JSONArray()
+        requestJson.put("header", jsonArray)
+
+        if (request.method.equals("post", true)) {
+            if (request.body is FormBody) {
+                val formBody = request.body as FormBody
+                for (i in 0 until formBody.size) {
+                    val jsonObject = JSONObject()
+                    jsonObject.put(formBody.encodedName(i), formBody.encodedValue(i))
+                    dataJson.put(jsonObject)
+                }
+            } else {
+
+            }
+        } else if (request.method.equals("get",true)){
+            val queryParameterNames = request.url.queryParameterNames
+            queryParameterNames.forEach {
+                val queryParameter = request.url.queryParameter(it)
+                val jsonObject = JSONObject()
+                jsonObject.put(it, queryParameter)
+                dataJson.put(jsonObject)
+            }
+        }
+
+
         return requestJson
     }
 }

@@ -1,17 +1,14 @@
 package com.qlcd.android.loggertools
 
+import android.content.Intent
 import androidx.activity.viewModels
-import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.GsonUtils
-import com.hjq.bar.OnTitleBarListener
-import com.hjq.bar.TitleBar
 import com.qlcd.android.loggertools.databinding.ActivityTestBinding
-import com.qlcd.loggertools.ARouterPath
+import com.qlcd.loggertools.BaseApplication.Companion.context
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.logger.LogKit
-import dagger.hilt.android.AndroidEntryPoint
+import com.qlcd.loggertools.ui.home.HomeActivity
 
-@AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
     private val _binding: ActivityTestBinding by binding()
@@ -30,12 +27,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initEvent(){
-        _binding.tbTitle.setOnTitleBarListener(object :OnTitleBarListener{
-            override fun onLeftClick(titleBar: TitleBar?) {
-                super.onLeftClick(titleBar)
-                finish()
-            }
-        })
         //LogKit.x 不管哪种类型的日志，都会插入到数据库中
         _binding.btnInsert.setOnClickListener {
             val hashMapOf = hashMapOf<String, Any>()
@@ -57,7 +48,7 @@ class MainActivity : BaseActivity() {
         }
 
         _binding.btnHome.setOnClickListener {
-            ARouter.getInstance().build(ARouterPath.ACTIVITY_HOME).navigation()
+            startActivity(Intent(context,HomeActivity::class.java))
         }
     }
 

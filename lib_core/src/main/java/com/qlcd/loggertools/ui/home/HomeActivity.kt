@@ -1,31 +1,26 @@
 package com.qlcd.loggertools.ui.home
 
+import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.hjq.bar.OnTitleBarListener
-import com.hjq.bar.TitleBar
-import com.qlcd.loggertools.ARouterPath
+import com.qlcd.loggertools.BaseApplication.Companion.context
 import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityHomeBinding
 import com.qlcd.loggertools.ext.dpToPx
 import com.qlcd.loggertools.ext.setThrottleClickListener
-import dagger.hilt.android.AndroidEntryPoint
+import com.qlcd.loggertools.ui.detail.LogDetailActivity
 import java.util.*
 
 /**
  * Created by GaoLuHan on 2022/6/13
  * Describe:
  */
-@AndroidEntryPoint
-@Route(path = ARouterPath.ACTIVITY_HOME)
 class HomeActivity : BaseActivity() {
 
     private val _binding: ActivityHomeBinding by binding()
@@ -49,12 +44,10 @@ class HomeActivity : BaseActivity() {
         _viewModel.getData()
         listAdapter.setOnItemClickListener { adapter, view, position ->
             val loggerEntity = listAdapter.data[position]
-            ARouter.getInstance()
-                .build(ARouterPath.ACTIVITY_DETAIL)
-                .withParcelable("entity", loggerEntity)
-                .navigation()
+            val intent = Intent(context, LogDetailActivity::class.java)
+            intent.putExtra("entity",loggerEntity)
+            startActivity(intent)
         }
-        initClick()
         initFilter()
     }
 
@@ -66,19 +59,6 @@ class HomeActivity : BaseActivity() {
         }
     }
 
-    private fun initClick() {
-        _binding.tbTitle.setOnTitleBarListener(object : OnTitleBarListener {
-            override fun onLeftClick(titleBar: TitleBar?) {
-                super.onLeftClick(titleBar)
-                finish()
-            }
-
-            override fun onRightClick(titleBar: TitleBar?) {
-                super.onRightClick(titleBar)
-                showFilter()
-            }
-        })
-    }
 
     private fun initFilter() {
         _binding.bgFilter.setThrottleClickListener {

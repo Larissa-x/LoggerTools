@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.qlcd.loggertools.db.LoggerDatabase
+import com.qlcd.loggertools.database.db.LoggerDatabase
 
 object DatabaseManager {
     private const val DB_NAME = "my_db.db"

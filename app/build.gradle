@@ -2,9 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'com.alibaba.arouter'
     id 'kotlin-parcelize'
-    id 'dagger.hilt.android.plugin'
 }
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -18,11 +16,7 @@ android {
         versionName rootProject.ext.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += [AROUTER_MODULE_NAME: project.getName()]
-            }
-        }
+
         ndk {
             abiFilters "armeabi", "armeabi-v7a"//, "arm64-v8a"
         }
@@ -40,11 +34,7 @@ android {
         dataBinding true
         viewBinding true
     }
-    kapt {
-        arguments {
-            arg("AROUTER_MODULE_NAME", project.getName())
-        }
-    }
+
 
 
     buildTypes {

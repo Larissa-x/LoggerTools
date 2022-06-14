@@ -1,4 +1,4 @@
-package com.qlcd.loggertools.db
+package com.qlcd.loggertools.database.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -8,7 +8,7 @@ import com.qlcd.loggertools.database.entity.LoggerEntity
 private const val DB_NAME = "my_db"
 private const val DB_VERSION = 1
 
-@Database(version = DB_VERSION, entities = [LoggerEntity::class])
+@Database(version = DB_VERSION, entities = [LoggerEntity::class],exportSchema = false)
 abstract class LoggerDatabase : RoomDatabase() {
 
     val loggerDao: LoggerDao by lazy { createLogDao() }

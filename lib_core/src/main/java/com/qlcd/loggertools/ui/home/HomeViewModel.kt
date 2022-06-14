@@ -5,18 +5,14 @@ import com.qlcd.loggertools.base.viewmodel.BaseViewModel
 import com.qlcd.loggertools.base.viewmodel.MutableStringLiveData
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.livedata.SingleLiveData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by GaoLuHan on 2022/6/13
  * Describe:
  */
-@HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val repository: HomeRepository,
-) : BaseViewModel() {
+class HomeViewModel : BaseViewModel() {
+    private val repository: HomeRepository = HomeRepository()
 
     val listLiveData = SingleLiveData<List<LoggerEntity>>()
     val keywords = MutableStringLiveData()
@@ -33,7 +29,6 @@ class HomeViewModel @Inject constructor(
             val requestLoggerList = repository.requestLoggerList()
             listLiveData.value = requestLoggerList
         }
-//        return listOf(LoggerEntity(), LoggerEntity(), LoggerEntity(), LoggerEntity(), LoggerEntity())
     }
 
 }
