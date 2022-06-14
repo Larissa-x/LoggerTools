@@ -9,6 +9,10 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 
 open class BaseApplication : Application() {
 
+   companion object {
+       lateinit var context: Application
+   }
+
     init {
         initARouter()
         initSmartRefreshLayout()
@@ -38,5 +42,10 @@ open class BaseApplication : Application() {
             ARouter.openDebug()
         }
         ARouter.init(this@BaseApplication)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        context = this
     }
 }

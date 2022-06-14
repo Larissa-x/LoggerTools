@@ -21,6 +21,7 @@ class HomeViewModel @Inject constructor(
     val listLiveData = SingleLiveData<List<LoggerEntity>>()
     val keywords = MutableStringLiveData()
 
+
     fun cleanSearchContent() {
         if (keywords.value.isNotEmpty()) {
             keywords.value = ""
