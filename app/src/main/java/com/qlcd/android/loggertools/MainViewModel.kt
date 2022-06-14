@@ -13,13 +13,14 @@ class MainViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     fun requestQuery(){
-        viewModelScope.launch {
+        val launch = viewModelScope.launch {
 //            val requestQueryLevel = repository.requestQueryLevel()
 //            val requestQueryAll = repository.requestQueryAll()
-//            val requestQueryAll = repository.requestQueryAll()
-            val requestQuery = repository.requestQuery(time = "2022-6-13",level = "debug",fileName = "MainActivity.kt")
+//            val requestQuery = repository.requestQuery(time = "2022-6-13",level = "debug",fileName = "MainActivity.kt")
+//
+//            LogUtils.json(requestQuery)
 
-            LogUtils.json(requestQuery)
+            repository.requestNetwork()
         }
     }
 
