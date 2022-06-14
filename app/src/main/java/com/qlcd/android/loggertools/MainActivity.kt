@@ -47,7 +47,7 @@ class MainActivity : BaseActivity() {
             hashMapOf["data"] = hashMap
 
             val toJson = GsonUtils.toJson(hashMapOf)
-            LogKit.d(toJson)
+            LogKit.json(toJson)
 
         }
 

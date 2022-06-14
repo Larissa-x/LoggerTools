@@ -59,6 +59,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.e(TAG, String.format(s, msg))
+                insertToDatabase()
             }
         }
     }
@@ -119,6 +120,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n║ ")
                 val s = getMethodNames()
                 println(String.format(s, message))
+                insertToDatabase()
                 return
             }
             if (j.startsWith("[")) {
@@ -127,6 +129,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n║ ")
                 val s = getMethodNames()
                 println(String.format(s, message))
+                insertToDatabase()
                 return
             }
             e("Invalid Json")
@@ -165,7 +168,6 @@ object LogKit {
         entity.fucName = sElements[stackOffset].methodName
         entity.lineNum = sElements[stackOffset].lineNumber.toString()
         entity.time = System.currentTimeMillis()
-        insertToDatabase()
         return builder.toString()
     }
 

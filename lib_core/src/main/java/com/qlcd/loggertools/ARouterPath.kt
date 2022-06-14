@@ -8,5 +8,5 @@ object ARouterPath {
 
     /**首页*/
     const val ACTIVITY_HOME = "/ui/home/HomeActivity"
-
+    const val ACTIVITY_DETAIL = "/ui/detail/LogDetailActivity"
 }

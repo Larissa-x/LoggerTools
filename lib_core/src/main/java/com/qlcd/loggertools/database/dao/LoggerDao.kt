@@ -48,7 +48,7 @@ interface LoggerDao {
     suspend fun query(
         level: String? = null,
         fileName: String? = null,
-        time: String? = null,
+        time: String? = null,//yyyy-MM-dd格式
         sort: String? = "DESC",
 //        page: Int = 1,//去掉分页逻辑
 //        pageNum: Int = 10,//去掉分页逻辑
@@ -74,8 +74,8 @@ interface LoggerDao {
                 calendar.set(Calendar.MINUTE, 59);
                 calendar.set(Calendar.SECOND, 59);
                 calendar.set(Calendar.MILLISECOND, 999);
-                val endTime = calendar.time.time
                 //当天23：59：:59
+                val endTime = calendar.time.time
                 buffer.append("time <=${endTime}")
                 buffer.append(" and ")
                 buffer.append("time >=${startTime}")
@@ -96,7 +96,7 @@ interface LoggerDao {
             }
             buffer.append("fileName='${fileName}'")
         }
-        buffer.append(" ORDER BY time ASC ")
+        buffer.append(" ORDER BY time $sort ")
 
         //去掉分页逻辑
 //        buffer.append("LIMIT ${(page-1)*pageNum},${pageNum}")

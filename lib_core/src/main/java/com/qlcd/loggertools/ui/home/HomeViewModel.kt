@@ -1,9 +1,12 @@
 package com.qlcd.loggertools.ui.home
 
+import androidx.lifecycle.viewModelScope
 import com.qlcd.loggertools.base.viewmodel.BaseViewModel
 import com.qlcd.loggertools.base.viewmodel.MutableStringLiveData
 import com.qlcd.loggertools.database.entity.LoggerEntity
+import com.qlcd.loggertools.livedata.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -15,6 +18,7 @@ class HomeViewModel @Inject constructor(
     private val repository: HomeRepository,
 ) : BaseViewModel() {
 
+    val listLiveData = SingleLiveData<List<LoggerEntity>>()
     val keywords = MutableStringLiveData()
 
     fun cleanSearchContent() {
@@ -23,8 +27,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getData(): List<LoggerEntity> {
-        return listOf(LoggerEntity(), LoggerEntity(), LoggerEntity(), LoggerEntity(), LoggerEntity())
+    fun getData() {
+        viewModelScope.launch {
+            val requestLoggerList = repository.requestLoggerList()
+            listLiveData.value = requestLoggerList
+        }
+//        return listOf(LoggerEntity(), LoggerEntity(), LoggerEntity(), LoggerEntity(), LoggerEntity())
     }
 
 }
