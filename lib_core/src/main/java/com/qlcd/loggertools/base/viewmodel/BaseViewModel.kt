@@ -1,6 +1,7 @@
 package com.qlcd.loggertools.base.viewmodel
 
 import android.os.Looper
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.qlcd.loggertools.base.view.ViewState
@@ -71,4 +72,44 @@ abstract class BaseViewModel : ViewModel(), IViewModel{
         setViewState(ViewState.DestroyState)
     }
 
+}
+
+class MutableIntLiveData(value: Int = 0) : MutableLiveData<Int>(value) {
+    override fun getValue(): Int {
+        return super.getValue() ?: 0
+    }
+}
+
+open class IntLiveData(value: Int = 0) : LiveData<Int>(value) {
+    override fun getValue(): Int {
+        return super.getValue() ?: 0
+    }
+}
+
+class MutableStringLiveData(value: String = "") : MutableLiveData<String>(value) {
+    override fun getValue(): String {
+        return super.getValue() ?: ""
+    }
+}
+
+open class StringLiveData(value: String = "") : LiveData<String>(value) {
+    override fun getValue(): String {
+        return super.getValue() ?: ""
+    }
+}
+
+class MutableBooleanLiveData(value: Boolean = false) : MutableLiveData<Boolean>(value) {
+    override fun getValue(): Boolean {
+        return super.getValue() ?: false
+    }
+
+    fun toggle() {
+        postValue(!value)
+    }
+}
+
+open class BooleanLiveData(value: Boolean = false) : LiveData<Boolean>(value) {
+    override fun getValue(): Boolean {
+        return super.getValue() ?: false
+    }
 }

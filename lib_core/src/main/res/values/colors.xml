@@ -5,4 +5,9 @@
     <color name="c_AppColor_02">#38BF87</color>
     <color name="c_AppColor_03">#F05542</color>
     <color name="c_AppColor_04">#FF9B3A</color>
+
+    <color name="app_color_white">#ffffff</color>
+    <color name="app_color_black">#222222</color>
+    <color name="app_color_gray">#f5f5f5</color>
+    <color name="app_color_blue">#0000ff</color>
 </resources>
