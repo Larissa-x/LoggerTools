@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.qlcd.loggertools.BaseApplication.Companion.context
 import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
+import com.qlcd.loggertools.database.entity.ApiEntity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityHomeBinding
 import com.qlcd.loggertools.ext.dpToPx
@@ -45,7 +46,7 @@ class HomeActivity : BaseActivity() {
         listAdapter.setOnItemClickListener { adapter, view, position ->
             val loggerEntity = listAdapter.data[position]
             val intent = Intent(context, LogDetailActivity::class.java)
-            intent.putExtra("entity",loggerEntity)
+            intent.putExtra("entity", loggerEntity)
             startActivity(intent)
         }
         initFilter()
@@ -86,8 +87,18 @@ class HomeActivity : BaseActivity() {
 private class HomeListAdapter :
     BaseQuickAdapter<LoggerEntity, BaseViewHolder>(R.layout.rv_item_home) {
     override fun convert(holder: BaseViewHolder, item: LoggerEntity) {
-        holder.setText(R.id.tv_state, "Success")
-        holder.setText(R.id.tv_date, TimeUtils.date2String(Date(item.time!!)))
-        holder.setText(R.id.tv_content, item.content)
+        holder.setText(R.id.tv_level, item.level)
+            .setText(R.id.tv_date, TimeUtils.date2String(Date(item.time!!)))
+        if (item.level.equals("json", true) && item.content.orEmpty().startsWith("{")) {
+            holder.setText(
+                R.id.tv_content,
+                "code: ${ApiEntity().parseJson(item.content.orEmpty()).response.code}  path: ${ApiEntity().parseJson(item.content.orEmpty()).request.path}"
+            )
+        } else {
+            holder.setText(R.id.tv_content, item.content)
+        }
+
     }
 }
+
+
