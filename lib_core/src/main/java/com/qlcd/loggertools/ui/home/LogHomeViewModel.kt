@@ -11,11 +11,12 @@ import kotlinx.coroutines.launch
  * Created by GaoLuHan on 2022/6/13
  * Describe:
  */
-class HomeViewModel : BaseViewModel() {
-    private val repository: HomeRepository = HomeRepository()
+class LogHomeViewModel : BaseViewModel() {
+    private val repositoryLog: LogHomeRepository = LogHomeRepository()
 
     val listLiveData = SingleLiveData<List<LoggerEntity>>()
     val keywords = MutableStringLiveData()
+    var prevKeywords = ""
 
 
     fun cleanSearchContent() {
@@ -26,7 +27,7 @@ class HomeViewModel : BaseViewModel() {
 
     fun getData() {
         viewModelScope.launch {
-            val requestLoggerList = repository.requestLoggerList()
+            val requestLoggerList = repositoryLog.requestLoggerList()
             listLiveData.value = requestLoggerList
         }
     }

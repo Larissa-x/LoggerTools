@@ -32,12 +32,6 @@ interface LoggerDao {
     @Query(value = "SELECT DISTINCT level FROM logger_table")
     suspend fun queryAllLevel(): List<String>
 
-    /**
-     * 查询logger_table所有文件名字
-     */
-    @Query(value = "SELECT DISTINCT fileName FROM logger_table")
-    suspend fun queryAllFileNames(): List<String>
-
     @RawQuery
     suspend fun customQueryAllLoggers(query: SupportSQLiteQuery): List<LoggerEntity>
 
@@ -47,7 +41,6 @@ interface LoggerDao {
      */
     suspend fun query(
         level: String? = null,
-        fileName: String? = null,
         time: String? = null,//yyyy-MM-dd格式
         sort: String? = "DESC",
 //        page: Int = 1,//去掉分页逻辑
@@ -55,7 +48,7 @@ interface LoggerDao {
     ): List<LoggerEntity> {
         val buffer = StringBuffer("SELECT * FROM logger_table")
 
-        if (!TextUtils.isEmpty(level) || !TextUtils.isEmpty(fileName) || !TextUtils.isEmpty(time)) {
+        if (!TextUtils.isEmpty(level) || !TextUtils.isEmpty(time)) {
             buffer.append(" WHERE ")
         }
 
@@ -89,12 +82,6 @@ interface LoggerDao {
                 buffer.append(" and ")
             }
             buffer.append("level='${level}'")
-        }
-        if (!TextUtils.isEmpty(fileName)) {
-            if (!buffer.endsWith(" WHERE ")) {
-                buffer.append(" and ")
-            }
-            buffer.append("fileName='${fileName}'")
         }
         buffer.append(" ORDER BY time $sort ")
 

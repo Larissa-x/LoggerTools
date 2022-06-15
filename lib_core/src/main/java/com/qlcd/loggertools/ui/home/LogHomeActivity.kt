@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -12,10 +13,13 @@ import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.database.entity.ApiEntity
 import com.qlcd.loggertools.database.entity.LoggerEntity
-import com.qlcd.loggertools.databinding.ActivityHomeBinding
+import com.qlcd.loggertools.databinding.ActivityLogHomeBinding
 import com.qlcd.loggertools.ext.dpToPx
 import com.qlcd.loggertools.ext.setThrottleClickListener
 import com.qlcd.loggertools.ui.detail.LogDetailActivity
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -24,32 +28,57 @@ import java.util.*
  */
 class HomeActivity : BaseActivity() {
 
-    private val _binding: ActivityHomeBinding by binding()
-    private val _viewModel: HomeViewModel by viewModels()
-    override fun bindLayout(): Int = R.layout.activity_home
-    override fun bindBaseViewModel() = _viewModel
+    private val _binding: ActivityLogHomeBinding by binding()
+    private val _viewModelLog: LogHomeViewModel by viewModels()
+    override fun bindLayout(): Int = R.layout.activity_log_home
+    override fun bindBaseViewModel() = _viewModelLog
     private val listAdapter = HomeListAdapter()
+    private var searchJob: Job? = null
 
     override fun bindViews() {
-        _binding.vm = _viewModel
+        _binding.vm = _viewModelLog
     }
 
     override fun doBusiness() {
-        _viewModel.keywords.observe(this) {
-        }
-        _binding.rv.adapter = listAdapter
-        _viewModel.listLiveData.observe(this) {
+        initClick()
+        initFilter()
+        initList()
+
+        _viewModelLog.getData()
+        _viewModelLog.listLiveData.observe(this) {
             listAdapter.setNewInstance(it.toMutableList())
         }
 
-        _viewModel.getData()
+        _viewModelLog.keywords.observe(this) {
+            if (it == _viewModelLog.prevKeywords) return@observe
+            _viewModelLog.prevKeywords = it
+            searchJob?.cancel()
+            searchJob = lifecycleScope.launch {
+                if (it.isNotEmpty()) {
+                    delay(500)
+                }
+                listAdapter.setNewInstance(listAdapter.data.filter { e-> e.content.orEmpty().contains(it) }.toMutableList())
+            }
+        }
+    }
+
+    private fun initList() {
+        _binding.rv.adapter = listAdapter
         listAdapter.setOnItemClickListener { adapter, view, position ->
             val loggerEntity = listAdapter.data[position]
             val intent = Intent(context, LogDetailActivity::class.java)
             intent.putExtra("entity", loggerEntity)
             startActivity(intent)
         }
-        initFilter()
+    }
+
+    private fun initClick() {
+        _binding.ivClose.setThrottleClickListener {
+            onBackPressed()
+        }
+        _binding.ivFilter.setThrottleClickListener {
+            showFilter()
+        }
     }
 
     override fun onBackPressed() {
@@ -97,7 +126,6 @@ private class HomeListAdapter :
         } else {
             holder.setText(R.id.tv_content, item.content)
         }
-
     }
 }
 

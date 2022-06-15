@@ -17,10 +17,9 @@ class MainRepository {
 //
     suspend fun requestQuery(
         level: String? = null,
-        fileName: String? = null,
         time: String? = null,
         sort: String? = "DESC",
-    ) = DatabaseManager.db.loggerDao.query(level, fileName, time, sort)
+    ) = DatabaseManager.db.loggerDao.query(level, time, sort)
 
 
     fun requestNetwork() {

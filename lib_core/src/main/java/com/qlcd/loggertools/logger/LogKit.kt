@@ -9,13 +9,13 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.*
 
 /** * Created by Tony Shen on 2017/1/2. */
 object LogKit {
 
-
-    private var entity: LoggerEntity = LoggerEntity()
     private var db: LoggerDao = DatabaseManager.db.loggerDao
+    private val logDataList = Collections.synchronizedList(mutableListOf<LoggerEntity>())
 
     enum class LogLevel {
         NONE {
@@ -53,22 +53,17 @@ object LogKit {
 
     @JvmStatic
     fun e(msg: String?) {
-        entity.level = "error"
-        entity.content = msg
         if (LogLevel.ERROR.value <= logLevel.value) {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.e(TAG, String.format(s, msg))
-                insertToDatabase()
+                insertToDatabase("error", msg)
             }
         }
     }
 
     @JvmStatic
     fun w(msg: String?) {
-        entity.level = "warn"
-        entity.content = msg
-
         if (LogLevel.WARN.value <= logLevel.value) {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
@@ -79,9 +74,6 @@ object LogKit {
 
     @JvmStatic
     fun i(msg: String?) {
-        entity.level = "info"
-        entity.content = msg
-
         if (LogLevel.INFO.value <= logLevel.value) {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
@@ -92,9 +84,6 @@ object LogKit {
 
     @JvmStatic
     fun d(msg: String?) {
-        entity.level = "debug"
-        entity.content = msg
-
         if (LogLevel.DEBUG.value <= logLevel.value) {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
@@ -105,8 +94,6 @@ object LogKit {
 
     @JvmStatic
     fun json(json: String?) {
-        entity.level = "json"
-        entity.content = json
         var j = json
         if (j.toString().isEmpty()) {
             d("Empty/Null json liveInfoDetail")
@@ -120,7 +107,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n║ ")
                 val s = getMethodNames()
                 println(String.format(s, message))
-                insertToDatabase()
+                insertToDatabase("json", json)
                 return
             }
             if (j.startsWith("[")) {
@@ -129,7 +116,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n║ ")
                 val s = getMethodNames()
                 println(String.format(s, message))
-                insertToDatabase()
+                insertToDatabase("json", json)
                 return
             }
             e("Invalid Json")
@@ -163,17 +150,18 @@ object LogKit {
             .append("│ ")
             .append("%s").append("\r\n")
             .append(LoggerPrinter.BOTTOM_BORDER).append("\r\n")
-
-        entity.fileName = sElements[stackOffset].fileName
-        entity.fucName = sElements[stackOffset].methodName
-        entity.lineNum = sElements[stackOffset].lineNumber.toString()
-        entity.time = System.currentTimeMillis()
         return builder.toString()
     }
 
-    private fun insertToDatabase() {
+    fun getLogData(): List<LoggerEntity> {
+        return logDataList
+    }
+
+    private fun insertToDatabase(level: String, content: String?) {
         GlobalScope.launch {
-            db.insertLogger(entity)
+            val e = LoggerEntity(level = level, time = System.currentTimeMillis(), content = content)
+            logDataList.add(0, e)
+            db.insertLogger(e)
         }
     }
 }

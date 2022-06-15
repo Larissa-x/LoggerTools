@@ -12,10 +12,5 @@ data class LoggerEntity(
     var id: Long? = null,
     var time: Long? = null,
     var level: String = "",
-    var fileName: String = "",
-    var fucName: String = "",
-    var lineNum: String = "",
     var content: String? = "",
-) :Parcelable{
-
-}
+) : Parcelable

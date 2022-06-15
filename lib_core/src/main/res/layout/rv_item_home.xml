@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -15,17 +16,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:text="success"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="success" />
 
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:text="2022年5月18日"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="2022年5月18日" />
     </LinearLayout>
 
     <TextView
@@ -35,8 +36,8 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:padding="10dp"
-        android:text="日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容"
-        android:textColor="@color/app_color_black" />
+        android:textColor="@color/app_color_black"
+        tools:text="日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容" />
 
     <View
         android:layout_width="match_parent"
