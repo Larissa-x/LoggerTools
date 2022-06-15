@@ -1,10 +1,6 @@
 package com.qlcd.loggertools.logger
 
-import com.google.gson.JsonArray
-import okhttp3.FormBody
-import okhttp3.Interceptor
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -37,7 +33,10 @@ class LoggerInterceptor : Interceptor {
     private fun formatRequestJson(request: Request): JSONObject {
         val requestJson = JSONObject()
         requestJson.put("method", request.method)
-        requestJson.put("url", request.url.toUri().toString() + request.url.encodedPath)
+        requestJson.put("scheme",request.url.scheme)
+        requestJson.put("host",request.url.host)
+        requestJson.put("port",request.url.port)
+        requestJson.put("path",request.url.encodedPath)
         val jsonArray = JSONArray()
         val names = request.headers.names()
         names.forEach {
@@ -57,9 +56,8 @@ class LoggerInterceptor : Interceptor {
                     jsonObject.put(formBody.encodedName(i), formBody.encodedValue(i))
                     dataJson.put(jsonObject)
                 }
-            } else {
-
             }
+
         } else if (request.method.equals("get",true)){
             val queryParameterNames = request.url.queryParameterNames
             queryParameterNames.forEach {
@@ -69,7 +67,7 @@ class LoggerInterceptor : Interceptor {
                 dataJson.put(jsonObject)
             }
         }
-
+        requestJson.put("params",dataJson)
 
         return requestJson
     }
