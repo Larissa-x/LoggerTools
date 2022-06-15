@@ -1,10 +1,20 @@
 package com.qlcd.loggertools.base.view.activity
 
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.blankj.utilcode.util.BarUtils
+import com.blankj.utilcode.util.BarUtils.getStatusBarHeight
+import com.blankj.utilcode.util.ColorUtils
+import com.blankj.utilcode.util.ResourceUtils
+import com.qlcd.loggertools.BaseApplication.Companion.context
+import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.IView
 import com.qlcd.loggertools.base.viewmodel.BaseViewModel
 import com.qlcd.loggertools.logger.LogKit
@@ -63,7 +73,8 @@ abstract class BaseActivity :
 
 
     protected open fun setStatusBar() {
-
+        BarUtils.setStatusBarColor(this, ColorUtils.getColor(R.color.app_color_white))
+        BarUtils.setStatusBarLightMode(this,true)
     }
 
 }
