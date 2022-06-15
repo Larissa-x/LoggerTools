@@ -41,7 +41,8 @@ class LoggerInterceptor : Interceptor {
         val names = request.headers.names()
         names.forEach {
             val jsonObject = JSONObject()
-            jsonObject.put(it, request.headers[it])
+            jsonObject.put("key",it)
+            jsonObject.put("value",request.headers[it])
             jsonArray.put(jsonObject)
         }
 
@@ -53,7 +54,8 @@ class LoggerInterceptor : Interceptor {
                 val formBody = request.body as FormBody
                 for (i in 0 until formBody.size) {
                     val jsonObject = JSONObject()
-                    jsonObject.put(formBody.encodedName(i), formBody.encodedValue(i))
+                    jsonObject.put("key",formBody.encodedName(i))
+                    jsonObject.put("value",formBody.encodedValue(i))
                     dataJson.put(jsonObject)
                 }
             }
@@ -63,7 +65,8 @@ class LoggerInterceptor : Interceptor {
             queryParameterNames.forEach {
                 val queryParameter = request.url.queryParameter(it)
                 val jsonObject = JSONObject()
-                jsonObject.put(it, queryParameter)
+                jsonObject.put("key",it)
+                jsonObject.put("value",queryParameter)
                 dataJson.put(jsonObject)
             }
         }
