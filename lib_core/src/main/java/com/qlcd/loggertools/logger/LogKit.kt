@@ -157,6 +157,10 @@ object LogKit {
         return logDataList
     }
 
+    fun cleanData() {
+        logDataList.clear()
+    }
+
     private fun insertToDatabase(level: String, content: String?) {
         GlobalScope.launch {
             val e = LoggerEntity(level = level, time = System.currentTimeMillis(), content = content)
