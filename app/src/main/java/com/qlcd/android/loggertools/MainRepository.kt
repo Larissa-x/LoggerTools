@@ -32,7 +32,7 @@ class MainRepository {
             .addEncoded("password", "admin.123")
             .build();
         val request = Request.Builder()
-            .url("https://apidata.huaykeji.com/v5/api/login")
+            .url("http://39.107.85.70:8301/app/relation/follow")
             .post(body)
             .addHeader("version", "1.0.0")
             .build()

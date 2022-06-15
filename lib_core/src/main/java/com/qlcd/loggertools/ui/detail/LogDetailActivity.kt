@@ -51,7 +51,9 @@ class LogDetailActivity : BaseActivity() {
     }
 
     private fun initEvent() {
-
+        _binding.ivNavBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun formatTime(startTime: Long, response: JSONObject): String {
