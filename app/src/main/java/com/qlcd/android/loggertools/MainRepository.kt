@@ -27,15 +27,15 @@ class MainRepository {
         val build = OkHttpClient.Builder()
             .addInterceptor(LoggerInterceptor())
             .build()
-        var body = MultipartBody.Builder()
-            .addFormDataPart("targetuserid", "userid")
-            .addFormDataPart("version", "1.0.0")
-            .addFormDataPart("plat", "1")
+
+        var body = FormBody.Builder()
+            .addEncoded("phone", "13521402817")
+            .addEncoded("password", "admin.123")
             .build();
         val request = Request.Builder()
-            .url("http://39.107.85.70:8301/app/relation/follow")
+            .url("https://apidata.huaykeji.com/v5/api/login")
             .post(body)
-            .addHeader("version", "test1")
+            .addHeader("version", "1.0.0")
             .build()
         build.newCall(request).enqueue(object :Callback{
             override fun onFailure(call: Call, e: IOException) {
