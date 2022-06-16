@@ -1,5 +1,6 @@
 package com.qlcd.loggertools.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.View
 import android.widget.TextView
@@ -7,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -70,6 +72,15 @@ class HomeActivity : BaseActivity() {
             intent.putExtra("entity", loggerEntity)
             startActivity(intent)
         }
+        _binding.rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy < 0) {
+                    // 上滑显示
+                } else if (dy > 0) {
+                    // 下滑隐藏
+                }
+            }
+        })
     }
 
     private fun initClick() {
