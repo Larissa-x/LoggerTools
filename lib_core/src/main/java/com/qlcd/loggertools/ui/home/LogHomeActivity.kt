@@ -1,6 +1,5 @@
 package com.qlcd.loggertools.ui.home
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.View
 import android.widget.TextView
@@ -9,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -22,6 +22,7 @@ import com.qlcd.loggertools.ext.dpToPx
 import com.qlcd.loggertools.ext.setThrottleClickListener
 import com.qlcd.loggertools.logger.LogKit
 import com.qlcd.loggertools.ui.detail.LogDetailActivity
+import com.qlcd.loggertools.utils.AnimationUtils
 import com.qlcd.loggertools.widget.dialog.BaseDialog
 import com.qlcd.loggertools.widget.dialog.DialogViewConverter
 import kotlinx.coroutines.Job
@@ -58,7 +59,8 @@ class HomeActivity : BaseActivity() {
                 if (it.isNotEmpty()) {
                     delay(500)
                 }
-                listAdapter.setNewInstance(LogKit.getLogData().filter { e -> e.content.orEmpty().contains(it) }.toMutableList())
+                listAdapter.setNewInstance(LogKit.getLogData()
+                    .filter { e -> e.content.orEmpty().contains(it) }.toMutableList())
             }
         }
     }
@@ -74,10 +76,19 @@ class HomeActivity : BaseActivity() {
         }
         _binding.rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                LogUtils.d("滑动状态$dy")
                 if (dy < 0) {
                     // 上滑显示
+                    if (_binding.tvClean.visibility == View.GONE && _binding.blockSearch.visibility == View.GONE) {
+                        AnimationUtils.showAndHiddenAnimation(_binding.tvClean, AnimationUtils.AnimationState.STATE_SHOW_UP,300)
+                        AnimationUtils.showAndHiddenAnimation(_binding.blockSearch, AnimationUtils.AnimationState.STATE_SHOW_DOWN,300)
+                    }
                 } else if (dy > 0) {
                     // 下滑隐藏
+                    if (_binding.tvClean.visibility == View.VISIBLE && _binding.blockSearch.visibility == View.VISIBLE) {
+                        AnimationUtils.showAndHiddenAnimation(_binding.tvClean, AnimationUtils.AnimationState.STATE_HIDDEN_UP,300)
+                        AnimationUtils.showAndHiddenAnimation(_binding.blockSearch, AnimationUtils.AnimationState.STATE_HIDDEN_DOWN,300)
+                    }
                 }
             }
         })
@@ -150,7 +161,9 @@ private class LogHomeListAdapter :
         if (item.level.equals("json", true) && item.content.orEmpty().startsWith("{")) {
             holder.setText(
                 R.id.tv_content,
-                "code: ${ApiEntity().parseJson(item.content.orEmpty()).response.code}  path: ${ApiEntity().parseJson(item.content.orEmpty()).request.path}"
+                "code: ${ApiEntity().parseJson(item.content.orEmpty()).response.code}  path: ${
+                    ApiEntity().parseJson(item.content.orEmpty()).request.path
+                }"
             )
         } else {
             holder.setText(R.id.tv_content, item.content)
