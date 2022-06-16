@@ -175,10 +175,12 @@
                 android:translationX="300dp"
                 tools:translationX="0dp">
 
-                <androidx.core.widget.NestedScrollView
+                <ScrollView
                     android:id="@+id/scroll_view_filter"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:fillViewport="true"
+                    android:overScrollMode="ifContentScrolls"
                     app:layout_constraintBottom_toTopOf="@id/tv_reset"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -203,41 +205,10 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <LinearLayout
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_sort"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp">
-
-                            <CheckedTextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="15dp"
-                                android:layout_marginEnd="15dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/app_btn_selector_filter"
-                                android:gravity="center"
-                                android:paddingStart="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingEnd="15dp"
-                                android:paddingBottom="10dp"
-                                android:text="正序"
-                                android:textSize="12sp" />
-
-                            <CheckedTextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="15dp"
-                                android:layout_marginEnd="15dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/app_btn_selector_filter"
-                                android:gravity="center"
-                                android:paddingStart="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingEnd="15dp"
-                                android:paddingBottom="10dp"
-                                android:text="倒序"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+                            android:layout_height="wrap_content" />
 
                         <TextView
                             android:id="@+id/tv_date"
@@ -251,43 +222,12 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <LinearLayout
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_date"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp">
-
-                            <CheckedTextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="15dp"
-                                android:layout_marginEnd="15dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/app_btn_selector_filter"
-                                android:gravity="center"
-                                android:paddingStart="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingEnd="15dp"
-                                android:paddingBottom="10dp"
-                                android:text="自启动后"
-                                android:textSize="12sp" />
-
-                            <CheckedTextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="15dp"
-                                android:layout_marginEnd="15dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/app_btn_selector_filter"
-                                android:gravity="center"
-                                android:paddingStart="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingEnd="15dp"
-                                android:paddingBottom="10dp"
-                                android:text="XXXX年XX月XX日"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
-                </androidx.core.widget.NestedScrollView>
+                </ScrollView>
 
                 <TextView
                     android:id="@+id/tv_reset"

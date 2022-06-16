@@ -6,6 +6,6 @@ package com.qlcd.loggertools.database.entity
  */
 class LabelEntity(
     val id: String = "",
-    val name: String = "",
+    var name: String = "",
     var checked: Boolean = false,
 )
