@@ -139,67 +139,6 @@ class LogListActivity : BaseActivity() {
         }
         //默认选择倒序
         _binding.rbDesc.isChecked = true
-        var upIng = false
-        var upIng2 = false
-
-        var downIng = false
-        var downIng2 = false
-
-        _binding.scrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            LogUtils.d("滑动状态${scrollY > oldScrollY}")
-            if (scrollY > oldScrollY) {
-                if (_binding.tvClean.visibility == View.VISIBLE) {
-                    if (!upIng) {
-                        upIng = true
-                        _binding.tvClean.animate().setDuration(30)
-                            .translationY(SizeUtils.getMeasuredHeight(_binding.tvClean).toFloat())
-                            .withEndAction {
-                                _binding.tvClean.visibility = View.GONE
-                                upIng = false
-                            }
-
-                    }
-                }
-//                if (_binding.blockSearch.visibility == View.VISIBLE) {
-//                    if (!upIng2) {
-//                        upIng2 = true
-//                        _binding.blockSearch.animate().setDuration(30)
-//                            .translationY(0f)
-//                            .withEndAction {
-//                                _binding.blockSearch.visibility = View.GONE
-//                                upIng2 = false
-//                            }
-//                    }
-//                }
-
-            } else {
-                if (_binding.tvClean.visibility == View.GONE) {
-                    if (!downIng) {
-                        downIng = true
-                        _binding.tvClean.animate().setDuration(30).translationY(0f)
-                            .withStartAction {
-                                _binding.tvClean.visibility = View.VISIBLE
-                            }.withEndAction {
-                                downIng = false
-                            }
-
-                    }
-                }
-
-//                if (_binding.blockSearch.visibility == View.GONE) {
-//                    if (!downIng2) {
-//                        downIng2 = true
-//                        _binding.blockSearch.animate().setDuration(30)
-//                            .translationY(SizeUtils.getMeasuredHeight(_binding.blockSearch)
-//                                .toFloat()).withStartAction {
-//                                _binding.blockSearch.visibility = View.VISIBLE
-//                            }.withEndAction {
-//                                downIng2 = false
-//                            }
-//                    }
-//                }
-            }
-        }
     }
 
     private fun getSortType(): String {
