@@ -64,4 +64,8 @@ class LogListViewModel : BaseViewModel() {
         }
         setNormal()
     }
+
+    fun cleanData() {
+        LogKit.cleanData()
+    }
 }

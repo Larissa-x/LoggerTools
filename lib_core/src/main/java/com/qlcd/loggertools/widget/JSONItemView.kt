@@ -57,7 +57,7 @@ class JSONItemView @JvmOverloads constructor(
 
     private fun initView() {
         orientation = VERTICAL
-        LayoutInflater.from(context).inflate(R.layout.item_json_view, this, true)
+        LayoutInflater.from(context).inflate(R.layout.rv_item_json_view, this, true)
         tvLeft = findViewById(R.id.tv_left)
         ivIcon = findViewById(R.id.iv_icon)
         tvRight = findViewById(R.id.tv_right)

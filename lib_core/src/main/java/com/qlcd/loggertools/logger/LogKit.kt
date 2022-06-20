@@ -4,6 +4,8 @@ import android.util.Log
 import com.qlcd.loggertools.database.dao.LoggerDao
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.manager.DatabaseManager
+import com.qlcd.loggertools.widget.STR_ERROR
+import com.qlcd.loggertools.widget.STR_JSON
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -13,7 +15,6 @@ import java.util.*
 
 /** * Created by Tony Shen on 2017/1/2. */
 object LogKit {
-
     private var db: LoggerDao = DatabaseManager.db.loggerDao
     private val logDataList = Collections.synchronizedList(mutableListOf<LoggerEntity>())
 
@@ -57,7 +58,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.e(TAG, String.format(s, msg))
-                insertToDatabase("error", msg)
+                insertToDatabase(STR_ERROR, msg)
             }
         }
     }
@@ -107,7 +108,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n║ ")
                 val s = getMethodNames()
                 println(String.format(s, message))
-                insertToDatabase("json", json)
+                insertToDatabase(STR_JSON, json)
                 return
             }
             if (j.startsWith("[")) {
@@ -116,7 +117,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n║ ")
                 val s = getMethodNames()
                 println(String.format(s, message))
-                insertToDatabase("json", json)
+                insertToDatabase(STR_JSON, json)
                 return
             }
             e("Invalid Json")

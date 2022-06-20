@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="日志详情"
-                android:textColor="@color/c_333333"
+                android:textColor="@color/app_color_black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -58,7 +58,7 @@
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="4dp"
                     android:text="时间类型"
-                    android:textColor="@color/c_333333"
+                    android:textColor="@color/app_color_black"
                     android:textSize="14sp" />
 
 

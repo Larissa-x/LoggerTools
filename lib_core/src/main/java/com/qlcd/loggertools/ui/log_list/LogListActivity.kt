@@ -1,17 +1,15 @@
 package com.qlcd.loggertools.ui.log_list
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.blankj.utilcode.util.*
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -23,12 +21,15 @@ import com.qlcd.loggertools.BaseApplication
 import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.database.entity.ApiEntity
-import com.qlcd.loggertools.database.entity.LabelEntity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityLogListBinding
 import com.qlcd.loggertools.ext.setThrottleClickListener
-import com.qlcd.loggertools.ext.toColorInt
 import com.qlcd.loggertools.ui.detail.LogDetailActivity
+import com.qlcd.loggertools.widget.KEY_ENTITY
+import com.qlcd.loggertools.widget.STR_ERROR
+import com.qlcd.loggertools.widget.STR_JSON
+import com.qlcd.loggertools.widget.dialog.BaseDialog
+import com.qlcd.loggertools.widget.dialog.DialogViewConverter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -36,12 +37,12 @@ import java.util.*
 
 class LogListActivity : BaseActivity() {
 
-    private lateinit var _adapter: LogHomeListAdapter
     private val _binding: ActivityLogListBinding by binding()
     private val _viewModel: LogListViewModel by viewModels()
     override fun bindLayout() = R.layout.activity_log_list
     override fun bindBaseViewModel() = _viewModel
     private var searchJob: Job? = null
+    private lateinit var _adapter: LogHomeListAdapter
     private val _filterListAdapter = FilterListAdapter()
     override fun bindViews() {
         _binding.viewModel = _viewModel
@@ -50,6 +51,9 @@ class LogListActivity : BaseActivity() {
     override fun doBusiness() {
         initView()
         initEvent()
+
+        //默认选择倒序
+        _binding.rbDesc.isChecked = true
         _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
         _viewModel.getData(getSortType())
     }
@@ -60,22 +64,87 @@ class LogListActivity : BaseActivity() {
             adapter = _filterListAdapter
         }
 
-
         _binding.rvList.layoutManager = LinearLayoutManager(this)
         _adapter = LogHomeListAdapter()
         _binding.rvList.adapter = _adapter
 
-        _adapter.setOnItemClickListener { adapter, view, position ->
+        _adapter.setOnItemClickListener { _, _, position ->
             val loggerEntity = _adapter.data[position]
             val intent = Intent(BaseApplication.context, LogDetailActivity::class.java)
-            intent.putExtra("entity", loggerEntity)
+            intent.putExtra(KEY_ENTITY, loggerEntity)
             startActivity(intent)
         }
     }
 
+    @SuppressLint("RtlHardcoded")
     private fun initEvent() {
         _binding.ivClose.setThrottleClickListener {
             onBackPressed()
+        }
+
+        //右上角抽屉按钮开关
+        _binding.ivFilter.setThrottleClickListener {
+            resetFilterState()
+            _binding.drawLayout.openDrawer(Gravity.RIGHT)
+        }
+
+        //点击自启动方式获取数据
+        _binding.tvStarting.setThrottleClickListener {
+            _viewModel.isDateFilter.value = false
+            _viewModel.dateTextFilter.value = ""
+        }
+
+        //点击开始根据日期筛选数据
+        _binding.tvDateFilter.setThrottleClickListener {
+            showDateSelectorDialog()
+        }
+
+        _binding.btnReset.setThrottleClickListener {
+            //默认选择倒序
+            _binding.rbDesc.isChecked = true
+            _viewModel.dateTextFilter.value = ""
+            _viewModel.isDateFilter.value = false
+            _viewModel.prevSortType = LogListViewModel.DESC
+            _viewModel.prevDateFlag = false
+            _viewModel.prevDateText = ""
+            _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
+            _viewModel.getData(getSortType())
+        }
+
+        _binding.btnConfirm.setThrottleClickListener {
+            if (_viewModel.isDateFilter.value) {
+                if (_viewModel.dateTextFilter.value.isEmpty()) {
+                    ToastUtils.showShort("请先选择日期")
+                    return@setThrottleClickListener
+                }
+            }
+            // 选择完后记录下选择的数据
+            _viewModel.prevSortType = getSortType()
+            _viewModel.prevDateFlag = _viewModel.isDateFilter.value
+            _viewModel.prevDateText = _viewModel.dateTextFilter.value
+
+            _binding.drawLayout.closeDrawers()
+            _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
+            _viewModel.getData(getSortType())
+        }
+
+        _binding.tvClean.setThrottleClickListener {
+            BaseDialog(
+                viewConverter = object : DialogViewConverter() {
+                    override fun convertView(dialogView: View, dialog: DialogFragment) {
+                        dialogView.run {
+                            findViewById<TextView>(R.id.tv_cancel).setOnClickListener {
+                                dialog.dismiss()
+                            }
+                            findViewById<TextView>(R.id.tv_confirm).setOnClickListener {
+                                _viewModel.cleanData()
+                                _adapter.setNewInstance(null)
+                                dialog.dismiss()
+                            }
+                        }
+                    }
+                }
+            ).show(supportFragmentManager)
         }
         _viewModel.keywords.observe(this) {
             if (it == _viewModel.prevKeywords) return@observe
@@ -90,23 +159,6 @@ class LogListActivity : BaseActivity() {
                 )
             }
         }
-        //右上角抽屉按钮开关
-        _binding.ivFilter.setOnClickListener {
-             resetFilterState()
-            _binding.drawLayout.openDrawer(Gravity.RIGHT)
-        }
-
-        //点击自启动方式获取数据
-        _binding.tvStarting.setOnClickListener {
-            _viewModel.isDateFilter.value = false
-            _viewModel.dateTextFilter.value = ""
-        }
-
-        //点击开始根据日期筛选数据
-        _binding.tvDateFilter.setOnClickListener {
-            showDateSelectorDialog()
-        }
-
         //true：指定日期   false：自启动
         _viewModel.isDateFilter.observe(this) {
             if (it && _viewModel.dateTextFilter.value.isNotEmpty()) {
@@ -114,10 +166,10 @@ class LogListActivity : BaseActivity() {
                 _binding.tvDateFilter.setBackgroundResource(R.drawable.bg_sort_true)
                 _binding.tvDateFilter.setTextColor(ColorUtils.getColor(R.color.app_color_white))
                 _binding.tvStarting.setBackgroundResource(R.drawable.bg_sort_false)
-                _binding.tvStarting.setTextColor(ColorUtils.getColor(R.color.c_333333))
+                _binding.tvStarting.setTextColor(ColorUtils.getColor(R.color.app_color_black))
             } else {
                 _binding.tvDateFilter.setBackgroundResource(R.drawable.bg_sort_false)
-                _binding.tvDateFilter.setTextColor(ColorUtils.getColor(R.color.c_333333))
+                _binding.tvDateFilter.setTextColor(ColorUtils.getColor(R.color.app_color_black))
                 _binding.tvStarting.setBackgroundResource(R.drawable.bg_sort_true)
                 _binding.tvStarting.setTextColor(ColorUtils.getColor(R.color.app_color_white))
             }
@@ -125,41 +177,6 @@ class LogListActivity : BaseActivity() {
         _viewModel.loggerListLivedata.observe(this) {
             _adapter.setNewInstance(it.toMutableList())
         }
-
-        _binding.btnReset.setOnClickListener {
-            //默认选择倒序
-            _binding.rbDesc.isChecked = true
-            _viewModel.dateTextFilter.value = ""
-            _viewModel.isDateFilter.value = false
-            _viewModel.prevSortType = LogListViewModel.DESC
-            _viewModel.prevDateFlag = false
-            _viewModel.prevDateText = ""
-            _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
-            _viewModel.getData(getSortType())
-        }
-
-        _binding.btnConfirm.setOnClickListener {
-            if (_viewModel.isDateFilter.value) {
-                if (_viewModel.dateTextFilter.value.isEmpty()) {
-                    ToastUtils.showShort("请先选择日期")
-                    return@setOnClickListener
-                }
-            }
-            // 选择完后记录下选择的数据
-            _viewModel.prevSortType = getSortType()
-            _viewModel.prevDateFlag = _viewModel.isDateFilter.value
-            _viewModel.prevDateText = _viewModel.dateTextFilter.value
-
-            _binding.drawLayout.closeDrawers()
-            _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
-            _viewModel.getData(getSortType())
-        }
-
-        _binding.tvClean.setOnClickListener {
-            _adapter.setNewInstance(null)
-        }
-        //默认选择倒序
-        _binding.rbDesc.isChecked = true
     }
 
     private fun getSortType(): String {
@@ -181,7 +198,7 @@ class LogListActivity : BaseActivity() {
     private fun showDateSelectorDialog() {
         TimePickerBuilder(
             this
-        ) { date, v ->
+        ) { date, _ ->
             _viewModel.dateTextFilter.value = TimeUtils.date2String(date, "yyyy-MM-dd")
             _viewModel.isDateFilter.value = true
         }
@@ -197,23 +214,29 @@ class LogListActivity : BaseActivity() {
         }
         super.onBackPressed()
     }
+}
 
-
-    class LogHomeListAdapter :
-        BaseQuickAdapter<LoggerEntity, BaseViewHolder>(R.layout.rv_item_home) {
-        override fun convert(holder: BaseViewHolder, item: LoggerEntity) {
-            holder.setText(R.id.tv_level, item.level)
-                .setText(R.id.tv_date, TimeUtils.date2String(Date(item.time!!)))
-            if (item.level.equals("json", true) && item.content.orEmpty().startsWith("{")) {
-                holder.setText(
-                    R.id.tv_content,
-                    "code: ${ApiEntity().parseJson(item.content.orEmpty()).response.code}  path: ${
-                        ApiEntity().parseJson(item.content.orEmpty()).request.path
-                    }"
-                )
-            } else {
-                holder.setText(R.id.tv_content, item.content)
-            }
+private class LogHomeListAdapter :
+    BaseQuickAdapter<LoggerEntity, BaseViewHolder>(R.layout.rv_item_log_list) {
+    override fun convert(holder: BaseViewHolder, item: LoggerEntity) {
+        holder.setText(R.id.tv_level, item.level)
+            .setTextColorRes(
+                R.id.tv_level, if (item.level.equals(STR_ERROR, true)) {
+                    R.color.app_color_red
+                } else {
+                    R.color.app_color_gray
+                }
+            )
+            .setText(R.id.tv_date, TimeUtils.date2String(Date(item.time!!)))
+        if (item.level.equals(STR_JSON, true) && item.content.orEmpty().startsWith("{")) {
+            holder.setText(
+                R.id.tv_content,
+                "code: ${ApiEntity().parseJson(item.content.orEmpty()).response.code}  path: ${
+                    ApiEntity().parseJson(item.content.orEmpty()).request.path
+                }"
+            )
+        } else {
+            holder.setText(R.id.tv_content, item.content)
         }
     }
 }

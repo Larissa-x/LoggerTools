@@ -1,6 +1,12 @@
 package com.qlcd.loggertools.logger
 
-import okhttp3.*
+import com.qlcd.loggertools.widget.KEY_REQUEST
+import com.qlcd.loggertools.widget.KEY_RESPONSE
+import com.qlcd.loggertools.widget.KEY_RESPONSE_DURATION
+import okhttp3.FormBody
+import okhttp3.Interceptor
+import okhttp3.Request
+import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -18,31 +24,31 @@ class LoggerInterceptor : Interceptor {
 
         val body = response.body
         val mediaType = body?.contentType()
-        val content = body?.string()
+        val content = body?.string().orEmpty()
         val jsonObject = JSONObject()
         val responseJson = JSONObject(content)
         val tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)
 
-        responseJson.put("responseDuration", tookMs)
-        jsonObject.put("request", formatRequestJson(request))
-        jsonObject.put("response", responseJson)
+        responseJson.put(KEY_RESPONSE_DURATION, tookMs)
+        jsonObject.put(KEY_REQUEST, formatRequestJson(request))
+        jsonObject.put(KEY_RESPONSE, responseJson)
         LogKit.json(jsonObject.toString())
-        return response.newBuilder().body(content?.toResponseBody(mediaType)).build()
+        return response.newBuilder().body(content.toResponseBody(mediaType)).build()
     }
 
     private fun formatRequestJson(request: Request): JSONObject {
         val requestJson = JSONObject()
         requestJson.put("method", request.method)
-        requestJson.put("scheme",request.url.scheme)
-        requestJson.put("host",request.url.host)
-        requestJson.put("port",request.url.port)
-        requestJson.put("path",request.url.encodedPath)
+        requestJson.put("scheme", request.url.scheme)
+        requestJson.put("host", request.url.host)
+        requestJson.put("port", request.url.port)
+        requestJson.put("path", request.url.encodedPath)
         val jsonArray = JSONArray()
         val names = request.headers.names()
         names.forEach {
             val jsonObject = JSONObject()
-            jsonObject.put("key",it)
-            jsonObject.put("value",request.headers[it])
+            jsonObject.put("key", it)
+            jsonObject.put("value", request.headers[it])
             jsonArray.put(jsonObject)
         }
 
@@ -54,23 +60,23 @@ class LoggerInterceptor : Interceptor {
                 val formBody = request.body as FormBody
                 for (i in 0 until formBody.size) {
                     val jsonObject = JSONObject()
-                    jsonObject.put("key",formBody.encodedName(i))
-                    jsonObject.put("value",formBody.encodedValue(i))
+                    jsonObject.put("key", formBody.encodedName(i))
+                    jsonObject.put("value", formBody.encodedValue(i))
                     dataJson.put(jsonObject)
                 }
             }
 
-        } else if (request.method.equals("get",true)){
+        } else if (request.method.equals("get", true)) {
             val queryParameterNames = request.url.queryParameterNames
             queryParameterNames.forEach {
                 val queryParameter = request.url.queryParameter(it)
                 val jsonObject = JSONObject()
-                jsonObject.put("key",it)
-                jsonObject.put("value",queryParameter)
+                jsonObject.put("key", it)
+                jsonObject.put("value", queryParameter)
                 dataJson.put(jsonObject)
             }
         }
-        requestJson.put("params",dataJson)
+        requestJson.put("params", dataJson)
 
         return requestJson
     }

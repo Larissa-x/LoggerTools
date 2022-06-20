@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="c_333333">#333333</color>
-    <color name="c_AppColor_01">#367DFF</color>
-    <color name="c_AppColor_02">#38BF87</color>
-    <color name="c_AppColor_03">#F05542</color>
-    <color name="c_AppColor_04">#FF9B3A</color>
-
-    <color name="app_color_white">#ffffff</color>
-    <color name="app_color_black">#222222</color>
-    <color name="app_color_gray">#f5f5f5</color>
-    <color name="app_color_blue">#3774f6</color>
-
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
     <color name="colorAccent">#367DFF</color>
 
-
+    <color name="app_color_white">#ffffff</color>
+    <color name="app_color_black">#222222</color>
+    <color name="app_color_gray">#f5f5f5</color>
+    <color name="app_color_blue">#367DFF</color>
+    <color name="app_color_red">#F94048</color>
 
     <color name="default_text_color">#333333</color>
     <color name="default_key_color">#92278f</color>

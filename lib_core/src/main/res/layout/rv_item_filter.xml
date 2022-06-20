@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:background="@drawable/app_bg_r5"
-    android:backgroundTint="@color/c_AppColor_01"
+    android:backgroundTint="@color/app_color_blue"
     android:gravity="center"
     android:paddingStart="8dp"
     android:paddingTop="4dp"

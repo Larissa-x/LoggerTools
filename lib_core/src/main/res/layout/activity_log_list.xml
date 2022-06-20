@@ -201,7 +201,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="15dp"
                         android:text="排序"
-                        android:textColor="@color/c_333333"
+                        android:textColor="@color/app_color_black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -247,7 +247,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="40dp"
                         android:text="时间"
-                        android:textColor="@color/c_333333"
+                        android:textColor="@color/app_color_black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -268,8 +268,8 @@
                             android:background="@drawable/selector_bg_sort"
                             android:gravity="center"
                             android:text="自启动后"
-                            android:textColor="@color/c_333333"
-                            android:textColorHint="@color/c_333333"
+                            android:textColor="@color/app_color_black"
+                            android:textColorHint="@color/app_color_black"
                             android:textSize="12sp" />
 
                         <TextView
@@ -282,8 +282,8 @@
                             android:gravity="center"
                             android:hint="时间筛选"
                             android:text="@{viewModel.dateTextFilter}"
-                            android:textColor="@color/c_333333"
-                            android:textColorHint="@color/c_333333"
+                            android:textColor="@color/app_color_black"
+                            android:textColorHint="@color/app_color_black"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>

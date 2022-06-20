@@ -1,19 +1,23 @@
 package com.qlcd.loggertools.ui.detail
 
+import android.annotation.SuppressLint
 import androidx.activity.viewModels
 import com.blankj.utilcode.util.TimeUtils
 import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityLogDetailBinding
+import com.qlcd.loggertools.ext.setThrottleClickListener
+import com.qlcd.loggertools.widget.KEY_ENTITY
+import com.qlcd.loggertools.widget.KEY_RESPONSE
+import com.qlcd.loggertools.widget.KEY_RESPONSE_DURATION
 import org.json.JSONObject
-import java.lang.Exception
 import java.util.*
 
 class LogDetailActivity : BaseActivity() {
 
 
-    var logEntity: LoggerEntity? = null
+    private var logEntity: LoggerEntity? = null
 
     private val _binding: ActivityLogDetailBinding by binding()
     private val _viewModel: LogDetailViewModel by viewModels()
@@ -28,16 +32,17 @@ class LogDetailActivity : BaseActivity() {
         initEvent()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
-        logEntity = intent.getParcelableExtra("entity")
+        logEntity = intent.getParcelableExtra(KEY_ENTITY)
         try {
             logEntity?.content?.let {
                 if (it.startsWith("{") || it.startsWith("[")) {
                     val jsonObject = JSONObject(logEntity?.content!!)
-                    val responseJson = jsonObject.optJSONObject("response")
+                    val responseJson = jsonObject.optJSONObject(KEY_RESPONSE)
                     val formatTime = formatTime(logEntity?.time!!, responseJson!!)
                     _binding.tvTitle.text = formatTime
-                    responseJson.remove("responseDuration")
+                    responseJson.remove(KEY_RESPONSE_DURATION)
                     _binding.rvJson.bindData(jsonObject)
                 } else {
                     _binding.tvTitle.text =
@@ -51,7 +56,7 @@ class LogDetailActivity : BaseActivity() {
     }
 
     private fun initEvent() {
-        _binding.ivNavBack.setOnClickListener {
+        _binding.ivNavBack.setThrottleClickListener {
             finish()
         }
     }
@@ -61,9 +66,9 @@ class LogDetailActivity : BaseActivity() {
         buffer.append("开始时间：")
         buffer.appendLine(TimeUtils.date2String(Date(startTime)))
         buffer.append("响应时间：")
-        buffer.appendLine(TimeUtils.date2String(Date(startTime + response.optLong("responseDuration"))))
+        buffer.appendLine(TimeUtils.date2String(Date(startTime + response.optLong(KEY_RESPONSE_DURATION))))
         buffer.append("耗时：")
-        buffer.appendLine(response.optLong("responseDuration").toString())
+        buffer.appendLine(response.optLong(KEY_RESPONSE_DURATION).toString())
         return buffer.toString()
     }
 }
