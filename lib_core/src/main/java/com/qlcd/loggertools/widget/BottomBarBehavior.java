@@ -11,6 +11,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
+/**
+ * 在string文件里引用了路径，修改包名时也要跟随修改，不然会报错
+ */
 public class BottomBarBehavior extends CoordinatorLayout.Behavior<View> {
     private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
 
