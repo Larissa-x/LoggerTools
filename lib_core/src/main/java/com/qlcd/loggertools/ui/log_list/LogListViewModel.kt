@@ -11,11 +11,22 @@ import com.qlcd.loggertools.manager.DatabaseManager
 import kotlinx.coroutines.launch
 
 class LogListViewModel : BaseViewModel() {
+
+    companion object {
+        const val DESC = "DESC"
+        const val ASC = "ASC"
+    }
+
     val keywords = MutableStringLiveData()
+    var prevKeywords = ""
 
     val isDateFilter = MutableBooleanLiveData(false)
 
     val dateTextFilter = MutableStringLiveData("")
+    // 默认倒序
+    var prevSortType = DESC
+    var prevDateFlag = false
+    var prevDateText = ""
 
     val loggerListLivedata = SingleLiveData<List<LoggerEntity>>()
     fun cleanSearchContent() {
