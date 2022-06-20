@@ -2,4 +2,6 @@
 <resources>
     <string name="close">close</string>
     <string name="expand">expand</string>
+    <string name="bottom_behavior">com.qlcd.loggertools.widget.BottomBarBehavior</string>
+
 </resources>
