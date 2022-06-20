@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
     android:background="@drawable/app_bg_r5"
-    android:backgroundTint="@color/app_color_gray"
+    android:backgroundTint="@color/c_AppColor_01"
     android:gravity="center"
-    android:padding="10dp"
-    android:text="排序"
-    android:textColor="@color/app_color_black"
-    android:textSize="12sp" />
+    android:paddingStart="8dp"
+    android:paddingTop="4dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="4dp"
+    android:textColor="@color/app_color_white"
+    android:textSize="12sp"
+    tools:text="排序" />

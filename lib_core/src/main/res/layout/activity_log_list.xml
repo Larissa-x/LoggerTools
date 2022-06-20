@@ -134,6 +134,12 @@
                                 app:layout_constraintTop_toTopOf="@id/et_search" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_selected_filter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            app:layout_scrollFlags="scroll|enterAlways|snap" />
 
                     </com.google.android.material.appbar.AppBarLayout>
 
@@ -169,12 +175,14 @@
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
             </LinearLayout>
 
-            <!--                侧滑菜单布局-->
+            <!--侧滑菜单布局-->
             <LinearLayout
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:background="@color/app_color_white"
+                android:layout_gravity="end"
+                android:background="@drawable/app_bg_left_r5"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -190,8 +198,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
                         android:text="排序"
                         android:textColor="@color/c_333333"
                         android:textSize="18sp"
@@ -236,7 +244,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
+                        android:layout_marginStart="15dp"
                         android:layout_marginTop="40dp"
                         android:text="时间"
                         android:textColor="@color/c_333333"
@@ -282,8 +290,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_40"
-                    android:layout_marginBottom="70dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="50dp"
                     android:orientation="horizontal"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp">
@@ -309,15 +317,8 @@
                         android:gravity="center"
                         android:text="确定"
                         android:textColor="@color/app_color_white" />
-
                 </LinearLayout>
-
-
             </LinearLayout>
         </androidx.drawerlayout.widget.DrawerLayout>
-
-
     </FrameLayout>
-
-
 </layout>

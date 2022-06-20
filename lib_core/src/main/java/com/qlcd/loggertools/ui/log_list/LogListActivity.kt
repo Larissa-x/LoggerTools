@@ -1,10 +1,12 @@
 package com.qlcd.loggertools.ui.log_list
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
@@ -14,12 +16,18 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.blankj.utilcode.util.*
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.qlcd.loggertools.BaseApplication
 import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.database.entity.ApiEntity
+import com.qlcd.loggertools.database.entity.LabelEntity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityLogListBinding
+import com.qlcd.loggertools.ext.setThrottleClickListener
+import com.qlcd.loggertools.ext.toColorInt
 import com.qlcd.loggertools.ui.detail.LogDetailActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -34,6 +42,7 @@ class LogListActivity : BaseActivity() {
     override fun bindLayout() = R.layout.activity_log_list
     override fun bindBaseViewModel() = _viewModel
     private var searchJob: Job? = null
+    private val _filterListAdapter = FilterListAdapter()
     override fun bindViews() {
         _binding.viewModel = _viewModel
     }
@@ -41,10 +50,17 @@ class LogListActivity : BaseActivity() {
     override fun doBusiness() {
         initView()
         initEvent()
+        _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
         _viewModel.getData(getSortType())
     }
 
     private fun initView() {
+        _binding.rvSelectedFilter.run {
+            layoutManager = FlexboxLayoutManager(context, FlexDirection.ROW, FlexWrap.WRAP)
+            adapter = _filterListAdapter
+        }
+
+
         _binding.rvList.layoutManager = LinearLayoutManager(this)
         _adapter = LogHomeListAdapter()
         _binding.rvList.adapter = _adapter
@@ -58,6 +74,9 @@ class LogListActivity : BaseActivity() {
     }
 
     private fun initEvent() {
+        _binding.ivClose.setThrottleClickListener {
+            onBackPressed()
+        }
         _viewModel.keywords.observe(this) {
             if (it == _viewModel.prevKeywords) return@observe
             _viewModel.prevKeywords = it
@@ -115,6 +134,7 @@ class LogListActivity : BaseActivity() {
             _viewModel.prevSortType = LogListViewModel.DESC
             _viewModel.prevDateFlag = false
             _viewModel.prevDateText = ""
+            _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
             _viewModel.getData(getSortType())
         }
 
@@ -131,6 +151,7 @@ class LogListActivity : BaseActivity() {
             _viewModel.prevDateText = _viewModel.dateTextFilter.value
 
             _binding.drawLayout.closeDrawers()
+            _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
             _viewModel.getData(getSortType())
         }
 
@@ -194,6 +215,13 @@ class LogListActivity : BaseActivity() {
                 holder.setText(R.id.tv_content, item.content)
             }
         }
+    }
+}
+
+private class FilterListAdapter : BaseQuickAdapter<String, BaseViewHolder>(R.layout.rv_item_filter) {
+
+    override fun convert(holder: BaseViewHolder, item: String) {
+        (holder.itemView as TextView).text = item
     }
 }
 

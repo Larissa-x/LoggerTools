@@ -23,6 +23,7 @@ class LogListViewModel : BaseViewModel() {
     val isDateFilter = MutableBooleanLiveData(false)
 
     val dateTextFilter = MutableStringLiveData("")
+
     // 默认倒序
     var prevSortType = DESC
     var prevDateFlag = false
@@ -35,12 +36,20 @@ class LogListViewModel : BaseViewModel() {
         }
     }
 
+    // 获取展示筛选项的ui数据
+    fun getFilterLabel(): List<String> {
+        val list = mutableListOf<String>()
+        list.add(if (prevSortType == DESC) "倒序" else "正序")
+        list.add(if (prevDateFlag) prevDateText else "自启动后")
+        return list
+    }
+
     fun getData(sortType: String) {
         setLoading()
         if (isDateFilter.value) {
             //根据日期筛选数据
             viewModelScope.launch {
-                val query = DatabaseManager.db.loggerDao.query(time = dateTextFilter.value,sort = sortType)
+                val query = DatabaseManager.db.loggerDao.query(time = dateTextFilter.value, sort = sortType)
                 loggerListLivedata.value = query
             }
         } else {
