@@ -30,4 +30,5 @@ buildFeatures {
 ```
 
 
+[![](https://jitpack.io/v/Larissa-x/LoggerTools.svg)](https://jitpack.io/#Larissa-x/LoggerTools)
 
