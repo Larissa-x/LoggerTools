@@ -20,13 +20,18 @@ buildFeatures {
 
 ```
     dependencies {
-        implementation 'com.github.Larissa-x:LoggerTools:v1.0.0'
+        implementation 'com.github.Larissa-x:LoggerTools:v1.0.1'
     }
 ```
     ### 二选一
 ```
     一、Application继承BaseApplication
     二、DatabaseManager.saveApplication(this)
+```
+
+    ### OkHttp网络请求请求日志拦截器
+```
+LoggerInterceptor()
 ```
 
 

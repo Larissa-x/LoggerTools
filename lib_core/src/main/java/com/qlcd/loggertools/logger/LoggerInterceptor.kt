@@ -1,6 +1,5 @@
 package com.qlcd.loggertools.logger
 
-import com.blankj.utilcode.util.LogUtils
 import com.qlcd.loggertools.widget.KEY_REQUEST
 import com.qlcd.loggertools.widget.KEY_RESPONSE
 import com.qlcd.loggertools.widget.KEY_RESPONSE_DURATION
@@ -9,7 +8,6 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
-import okio.Buffer
 import org.json.JSONArray
 import org.json.JSONObject
 import java.nio.charset.Charset
@@ -68,7 +66,7 @@ class LoggerInterceptor : Interceptor {
                 }
                 requestJson.put("params", dataJson)
             } else {
-                val buffer = Buffer()
+                val buffer = okio.Buffer()
                 request.body?.writeTo(buffer)
                 val contentType = request.body?.contentType()
                 val charset = contentType?.charset(Charset.forName("UTF-8"))
