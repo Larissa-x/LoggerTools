@@ -1,5 +1,6 @@
 package com.qlcd.loggertools.logger
 
+import com.blankj.utilcode.util.LogUtils
 import com.qlcd.loggertools.widget.KEY_REQUEST
 import com.qlcd.loggertools.widget.KEY_RESPONSE
 import com.qlcd.loggertools.widget.KEY_RESPONSE_DURATION
@@ -8,8 +9,10 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
+import okio.Buffer
 import org.json.JSONArray
 import org.json.JSONObject
+import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
 /**
@@ -54,7 +57,6 @@ class LoggerInterceptor : Interceptor {
 
         val dataJson = JSONArray()
         requestJson.put("header", jsonArray)
-
         if (request.method.equals("post", true)) {
             if (request.body is FormBody) {
                 val formBody = request.body as FormBody
@@ -64,8 +66,15 @@ class LoggerInterceptor : Interceptor {
                     jsonObject.put("value", formBody.encodedValue(i))
                     dataJson.put(jsonObject)
                 }
+                requestJson.put("params", dataJson)
+            } else {
+                val buffer = Buffer()
+                request.body?.writeTo(buffer)
+                val contentType = request.body?.contentType()
+                val charset = contentType?.charset(Charset.forName("UTF-8"))
+                val readString = buffer.readString(charset!!)
+                requestJson.put("params", JSONObject(readString))
             }
-
         } else if (request.method.equals("get", true)) {
             val queryParameterNames = request.url.queryParameterNames
             queryParameterNames.forEach {
@@ -75,9 +84,8 @@ class LoggerInterceptor : Interceptor {
                 jsonObject.put("value", queryParameter)
                 dataJson.put(jsonObject)
             }
+            requestJson.put("params", dataJson)
         }
-        requestJson.put("params", dataJson)
-
         return requestJson
     }
 }
