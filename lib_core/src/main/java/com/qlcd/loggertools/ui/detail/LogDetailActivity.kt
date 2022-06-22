@@ -7,7 +7,7 @@ import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityLogDetailBinding
-import com.qlcd.loggertools.ext.setThrottleClickListener
+import com.qlcd.loggertools.utils.setThrottleClickListener
 import com.qlcd.loggertools.widget.KEY_ENTITY
 import com.qlcd.loggertools.widget.KEY_RESPONSE
 import com.qlcd.loggertools.widget.KEY_RESPONSE_DURATION

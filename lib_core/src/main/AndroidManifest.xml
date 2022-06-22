@@ -5,6 +5,6 @@
     <application>
 
         <activity android:name=".ui.detail.LogDetailActivity"/>
-        <activity android:name=".ui.log_list.LogListActivity"/>
+        <activity android:name=".ui.list.LogListActivity"/>
     </application>
 </manifest>

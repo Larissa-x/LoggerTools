@@ -1,4 +1,4 @@
-package com.qlcd.loggertools.ui.log_list
+package com.qlcd.loggertools.ui.list
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -17,14 +17,14 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.qlcd.loggertools.BaseApplication
+import com.qlcd.loggertools.LoggerTools.context
 import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.database.entity.ApiEntity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityLogListBinding
-import com.qlcd.loggertools.ext.setThrottleClickListener
 import com.qlcd.loggertools.ui.detail.LogDetailActivity
+import com.qlcd.loggertools.utils.setThrottleClickListener
 import com.qlcd.loggertools.widget.KEY_ENTITY
 import com.qlcd.loggertools.widget.STR_ERROR
 import com.qlcd.loggertools.widget.STR_JSON
@@ -70,7 +70,7 @@ class LogListActivity : BaseActivity() {
 
         _adapter.setOnItemClickListener { _, _, position ->
             val loggerEntity = _adapter.data[position]
-            val intent = Intent(BaseApplication.context, LogDetailActivity::class.java)
+            val intent = Intent(context, LogDetailActivity::class.java)
             intent.putExtra(KEY_ENTITY, loggerEntity)
             startActivity(intent)
         }

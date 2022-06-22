@@ -1,4 +1,4 @@
-package com.qlcd.loggertools.ext
+package com.qlcd.loggertools.utils
 
 import android.graphics.Typeface
 import android.view.View

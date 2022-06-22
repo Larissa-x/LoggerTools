@@ -1,4 +1,4 @@
-package com.qlcd.loggertools.ui.log_list
+package com.qlcd.loggertools.ui.list
 
 import androidx.lifecycle.viewModelScope
 import com.qlcd.loggertools.base.viewmodel.BaseViewModel
@@ -55,7 +55,7 @@ class LogListViewModel : BaseViewModel() {
         } else {
             //获取自启动数据
             var logData = LogKit.getLogData()
-            logData = if (sortType == "DESC") {
+            logData = if (sortType == DESC) {
                 logData.sortedByDescending { it.time }
             } else {
                 logData.reversed()

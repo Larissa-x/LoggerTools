@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.ScreenUtils
 import com.qlcd.loggertools.R
-import com.qlcd.loggertools.ext.dpToPx
+import com.qlcd.loggertools.utils.dpToPx
 
 class BaseDialog(
     var viewConverter: DialogViewConverter? = null,

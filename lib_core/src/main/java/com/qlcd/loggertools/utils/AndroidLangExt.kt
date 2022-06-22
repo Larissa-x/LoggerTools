@@ -1,19 +1,17 @@
-package com.qlcd.loggertools.ext
+package com.qlcd.loggertools.utils
 
-import android.graphics.drawable.Drawable
 import android.text.*
 import android.util.TypedValue
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
-import com.qlcd.loggertools.BaseApplication
+import com.qlcd.loggertools.LoggerTools.context
 
 var Int.toDp: Int
     inline get() = toFloat().toDp
     private set(_) {}
 
 var Float.toDp: Int
-    inline get() = (this / (BaseApplication.context.resources.displayMetrics.density) + 0.5).toInt()
+    inline get() = (this / (context.resources.displayMetrics.density) + 0.5).toInt()
     private set(_) {}
 
 var Int.dpToPx: Float
@@ -21,7 +19,7 @@ var Int.dpToPx: Float
     private set(_) {}
 
 var Float.dpToPx: Float
-    inline get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, BaseApplication.context.resources.displayMetrics)
+    inline get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics)
     private set(_) {}
 
 var Int.spToPx: Float
@@ -29,18 +27,8 @@ var Int.spToPx: Float
     private set(_) {}
 
 var Float.spToPx: Float
-    inline get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, BaseApplication.context.resources.displayMetrics)
+    inline get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, context.resources.displayMetrics)
     private set(_) {}
-
-/**
- * 根据资源文件获取颜色int值
- */
-val Int.toColorInt: Int
-    inline get() = ContextCompat.getColor(BaseApplication.context, this)
-
-val Int.toDrawable: Drawable?
-    inline get() = ContextCompat.getDrawable(BaseApplication.context, this)
-
 
 /**
  * 点击节流

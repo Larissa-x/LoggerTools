@@ -4,10 +4,10 @@ import android.content.Intent
 import androidx.activity.viewModels
 import com.blankj.utilcode.util.GsonUtils
 import com.qlcd.android.loggertools.databinding.ActivityTestBinding
-import com.qlcd.loggertools.BaseApplication.Companion.context
+import com.qlcd.loggertools.LoggerTools.context
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.logger.LogKit
-import com.qlcd.loggertools.ui.log_list.LogListActivity
+import com.qlcd.loggertools.ui.list.LogListActivity
 
 class MainActivity : BaseActivity() {
 

@@ -1,26 +1,22 @@
 package com.qlcd.loggertools.manager
 
-import android.app.Application
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.qlcd.loggertools.LoggerTools
 import com.qlcd.loggertools.database.db.LoggerDatabase
 
 object DatabaseManager {
     private const val DB_NAME = "my_db.db"
     private val MIGRATIONS = arrayOf(Migration1)
-    private lateinit var application: Application
     val db: LoggerDatabase by lazy {
-        Room.databaseBuilder(application.applicationContext, LoggerDatabase::class.java, DB_NAME)
+        Room.databaseBuilder(LoggerTools.context.applicationContext, LoggerDatabase::class.java, DB_NAME)
             .addCallback(CreatedCallBack)
 //            .addMigrations(*MIGRATIONS)
             .build()
     }
 
-    fun saveApplication(application: Application) {
-        DatabaseManager.application = application
-    }
 
     private object CreatedCallBack : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
