@@ -54,6 +54,9 @@ class JSONViewAdapter(private val context: Context) :
 
     var textSize: Float = DEFAULT_TEXT_SIZE_SP
 
+    // 默认展开
+    var expandedFlag = true
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JsonItemViewHolder =
         JsonItemViewHolder(JSONItemView(context))
 
@@ -236,14 +239,19 @@ class JSONViewAdapter(private val context: Context) :
         hierarchy: Int
     ) =
         with(value) {
-            itemView.showIcon(true)
-            append("Object{...}")
-            setSpan(
-                ForegroundColorSpan(textColor),
-                0,
-                length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            if (expandedFlag) {
+                performFirstExpand(itemView, value, appendComma, hierarchy + 1)
+            } else {
+                itemView.showIcon(true)
+                append("Object{...}")
+                setSpan(
+                    ForegroundColorSpan(textColor),
+                    0,
+                    length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
             itemView.setOnClickListener(
                 JsonItemViewClickListener(
                     itemView,
@@ -270,30 +278,35 @@ class JSONViewAdapter(private val context: Context) :
         hierarchy: Int
     ) =
         with(value) {
-            itemView.showIcon(true)
-            append("Array[").append(value.length().toString()).append("]")
-            // 设置Array[的样式
-            setSpan(
-                ForegroundColorSpan(textColor),
-                0,
-                // 字符串"Array["的字符数量是6
-                6,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            // 设置数组数量的样式
-            setSpan(
-                ForegroundColorSpan(numberColor),
-                6,
-                length - 1,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            // 设置]的样式
-            setSpan(
-                ForegroundColorSpan(textColor),
-                length - 1,
-                length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            if (expandedFlag) {
+                performFirstExpand(itemView, value, appendComma, hierarchy + 1)
+            } else {
+                itemView.showIcon(true)
+                append("Array[").append(value.length().toString()).append("]")
+                // 设置Array[的样式
+                setSpan(
+                    ForegroundColorSpan(textColor),
+                    0,
+                    // 字符串"Array["的字符数量是6
+                    6,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                // 设置数组数量的样式
+                setSpan(
+                    ForegroundColorSpan(numberColor),
+                    6,
+                    length - 1,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                // 设置]的样式
+                setSpan(
+                    ForegroundColorSpan(textColor),
+                    length - 1,
+                    length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
             itemView.setOnClickListener(
                 JsonItemViewClickListener(
                     itemView,
@@ -303,6 +316,64 @@ class JSONViewAdapter(private val context: Context) :
                 )
             )
         }
+
+    /**
+     * The first time the view corresponding to a JSONObject or JSONArray is expanded.
+     * 第一次展开JSONObject或者JSONArray对应的itemView。
+     */
+    private fun performFirstExpand(
+        itemView: JSONItemView,
+        value: Any,
+        appendComma: Boolean,
+        hierarchy: Int
+    ) {
+        val isJsonObject = value is JSONObject
+
+        itemView.showIcon(false)
+        itemView.tag = itemView.getRightText()
+        itemView.showRight(if (isJsonObject) "{" else "[")
+
+        // 展开该层级以下的视图
+        val array: JSONArray? =
+            if (isJsonObject) (value as JSONObject).names() else value as JSONArray
+        val length = array?.length() ?: 0
+        for (i in 0 until length) {
+            itemView.addViewNoInvalidate(JSONItemView(itemView.context).apply {
+                textSize = this@JSONViewAdapter.textSize
+                setRightColor(textColor)
+                val childValue = array?.opt(i)
+                isJsonObject
+                    .yes {
+                        handleJSONObject(
+                            key = childValue as String,
+                            value = (value as JSONObject)[childValue],
+                            appendComma = i < length - 1,
+                            hierarchy = hierarchy
+                        )
+                    }
+                    .otherwise {
+                        handleJSONArray(
+                            value = childValue,
+                            appendComma = i < length - 1,
+                            hierarchy = hierarchy
+                        )
+                    }
+            })
+        }
+        // 展示该层级最后的一个视图
+        itemView.addViewNoInvalidate(JSONItemView(itemView.context).apply {
+            textSize = this@JSONViewAdapter.textSize
+            setRightColor(textColor)
+            showRight(
+                StringBuilder(getHierarchyStr(hierarchy - 1))
+                    .append(if (isJsonObject) "}" else "]")
+                    .append(if (appendComma) "," else "")
+            )
+        })
+        // 重绘itemView
+        itemView.requestLayout()
+        itemView.invalidate()
+    }
 
     /**
      * Handler json item view styles with a null value.
@@ -503,69 +574,13 @@ class JSONViewAdapter(private val context: Context) :
     ) : View.OnClickListener {
 
         // 判断是否展开
-        private var isExpanded = false
-
-        // 判断是否为JSONObject对象
-        private val isJsonObject
-            get() = value is JSONObject
+        private var isExpanded = expandedFlag
 
         override fun onClick(v: View?) {
             // 如果itemView的子View数量是1，就证明这是第一次展开
             (itemView.childCount == 1)
-                .yes { performFirstExpand() }
+                .yes { performFirstExpand(itemView, value, appendComma, hierarchy + 1) }
                 .otherwise { performClick() }
-        }
-
-        /**
-         * The first time the view corresponding to a JSONObject or JSONArray is expanded.
-         * 第一次展开JSONObject或者JSONArray对应的itemView。
-         */
-        private fun performFirstExpand() {
-            isExpanded = true
-            itemView.showIcon(false)
-            itemView.tag = itemView.getRightText()
-            itemView.showRight(if (isJsonObject) "{" else "[")
-
-            // 展开该层级以下的视图
-            val array: JSONArray? =
-                if (isJsonObject) (value as JSONObject).names() else value as JSONArray
-            val length = array?.length() ?: 0
-            for (i in 0 until length) {
-                itemView.addViewNoInvalidate(JSONItemView(itemView.context).apply {
-                    textSize = this@JSONViewAdapter.textSize
-                    setRightColor(textColor)
-                    val childValue = array?.opt(i)
-                    isJsonObject
-                        .yes {
-                            handleJSONObject(
-                                key = childValue as String,
-                                value = (value as JSONObject)[childValue],
-                                appendComma = i < length - 1,
-                                hierarchy = hierarchy
-                            )
-                        }
-                        .otherwise {
-                            handleJSONArray(
-                                value = childValue,
-                                appendComma = i < length - 1,
-                                hierarchy = hierarchy
-                            )
-                        }
-                })
-            }
-            // 展示该层级最后的一个视图
-            itemView.addViewNoInvalidate(JSONItemView(itemView.context).apply {
-                textSize = this@JSONViewAdapter.textSize
-                setRightColor(textColor)
-                showRight(
-                    StringBuilder(getHierarchyStr(hierarchy - 1))
-                        .append(if (isJsonObject) "}" else "]")
-                        .append(if (appendComma) "," else "")
-                )
-            })
-            // 重绘itemView
-            itemView.requestLayout()
-            itemView.invalidate()
         }
 
         /**
