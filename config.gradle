@@ -20,7 +20,6 @@ ext{
             Material_version          : "1.3.0",
             constraintlayout_version  : "2.0.4",
             room_version              : "2.4.0-alpha03",
-            OkHttp3Version            : "4.7.2",
             coroutinesVersion         : "1.3.9",
             RecyclerViewAdapterVersion: "3.0.4", //https://github.com/CymChad/BaseRecyclerViewAdapterHelper
             blankjUtilsVersion        : "1.30.6", // https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
@@ -42,8 +41,6 @@ ext{
             LifecycleForJava8      : "androidx.lifecycle:lifecycle-common-java8:${version["lifecycle_version"]}",
             LifeCycleForService    : "androidx.lifecycle:lifecycle-service:${version["lifecycle_version"]}",
             LifeCycleProcess       : "androidx.lifecycle:lifecycle-process:${version["lifecycle_version"]}",
-
-            OkHttp3                : "com.squareup.okhttp3:okhttp:${version["OkHttp3Version"]}",
 
             //协程
             coroutinesCore         : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${version["coroutinesVersion"]}",

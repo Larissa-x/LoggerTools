@@ -247,7 +247,11 @@ private class LogHomeListAdapter :
         return try {
             val jsonObject = JSONObject(content)
             val responseJson = jsonObject.optJSONObject(KEY_RESPONSE)
-            responseJson.optString(KEY_CODE)
+            if (responseJson != null) {
+                responseJson.optString(KEY_CODE)
+            } else {
+                ""
+            }
         } catch (e: JSONException) {
             ""
         }
@@ -258,7 +262,11 @@ private class LogHomeListAdapter :
         return try {
             val jsonObject = JSONObject(content)
             val requestJson = jsonObject.optJSONObject(KEY_REQUEST)
-            "path:${requestJson.optString("path")}"
+            if (requestJson != null) {
+                "path:${requestJson.optString("path")}"
+            } else {
+                content
+            }
         } catch (e: JSONException) {
             content
         }
