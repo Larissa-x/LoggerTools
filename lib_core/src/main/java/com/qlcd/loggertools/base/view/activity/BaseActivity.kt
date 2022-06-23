@@ -68,4 +68,8 @@ abstract class BaseActivity :
         BarUtils.setStatusBarLightMode(this, true)
     }
 
+    fun finishActivity() {
+        finish()
+        overridePendingTransition(R.anim.anim_activity_close_enter, R.anim.anim_activity_close_exit)
+    }
 }

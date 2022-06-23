@@ -1,6 +1,7 @@
 package com.qlcd.loggertools.ui.list
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.view.Gravity
 import android.view.View
@@ -36,6 +37,13 @@ import java.util.*
 
 class LogListActivity : BaseActivity() {
 
+    companion object {
+        fun start(context: Activity) {
+            context.startActivity(Intent(context, LogListActivity::class.java))
+            context.overridePendingTransition(R.anim.anim_activity_open_enter, R.anim.anim_activity_open_exit)
+        }
+    }
+
     private val _binding: ActivityLogListBinding by binding()
     private val _viewModel: LogListViewModel by viewModels()
     override fun bindLayout() = R.layout.activity_log_list
@@ -51,7 +59,7 @@ class LogListActivity : BaseActivity() {
         initView()
         initEvent()
 
-        //默认选择倒序
+        // 默认选择倒序
         _binding.rbDesc.isChecked = true
         _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
         _viewModel.getData(getSortType())
@@ -72,6 +80,7 @@ class LogListActivity : BaseActivity() {
             val intent = Intent(context, LogDetailActivity::class.java)
             intent.putExtra(KEY_ENTITY, loggerEntity)
             startActivity(intent)
+            overridePendingTransition(R.anim.anim_activity_open_enter, R.anim.anim_activity_open_exit)
         }
     }
 
@@ -81,25 +90,25 @@ class LogListActivity : BaseActivity() {
             onBackPressed()
         }
 
-        //右上角抽屉按钮开关
+        // 右上角抽屉按钮开关
         _binding.ivFilter.setThrottleClickListener {
             resetFilterState()
             _binding.drawLayout.openDrawer(Gravity.RIGHT)
         }
 
-        //点击自启动方式获取数据
+        // 点击自启动方式获取数据
         _binding.tvStarting.setThrottleClickListener {
             _viewModel.isDateFilter.value = false
             _viewModel.dateTextFilter.value = ""
         }
 
-        //点击开始根据日期筛选数据
+        // 点击开始根据日期筛选数据
         _binding.tvDateFilter.setThrottleClickListener {
             showDateSelectorDialog()
         }
 
         _binding.btnReset.setThrottleClickListener {
-            //默认选择倒序
+            // 默认选择倒序
             _binding.rbDesc.isChecked = true
             _viewModel.dateTextFilter.value = ""
             _viewModel.isDateFilter.value = false
@@ -154,14 +163,14 @@ class LogListActivity : BaseActivity() {
                     delay(500)
                 }
                 _adapter.setNewInstance(
-                    _viewModel.loggerListLivedata.value?.filter { e -> e.content.orEmpty().contains(it) }?.toMutableList()
+                    _viewModel.loggerListLivedata.value?.filter { e -> e.content.orEmpty().contains(it, true) }?.toMutableList()
                 )
             }
         }
-        //true：指定日期   false：自启动
+        // true：指定日期   false：自启动
         _viewModel.isDateFilter.observe(this) {
             if (it && _viewModel.dateTextFilter.value.isNotEmpty()) {
-                //指定日期获取数据
+                // 指定日期获取数据
                 _binding.tvDateFilter.setBackgroundResource(R.drawable.bg_sort_true)
                 _binding.tvDateFilter.setTextColor(ColorUtils.getColor(R.color.app_color_white))
                 _binding.tvStarting.setBackgroundResource(R.drawable.bg_sort_false)
@@ -211,7 +220,7 @@ class LogListActivity : BaseActivity() {
             _binding.drawLayout.closeDrawers()
             return
         }
-        super.onBackPressed()
+        finishActivity()
     }
 }
 

@@ -59,8 +59,12 @@ class LogDetailActivity : BaseActivity() {
 
     private fun initEvent() {
         _binding.ivNavBack.setThrottleClickListener {
-            finish()
+            finishActivity()
         }
+    }
+
+    override fun onBackPressed() {
+        finishActivity()
     }
 
     private fun formatTime(startTime: Long, response: JSONObject): String {

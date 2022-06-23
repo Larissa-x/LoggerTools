@@ -64,7 +64,8 @@
 
                 <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/app_color_bg">
 
                     <com.google.android.material.appbar.AppBarLayout
                         android:layout_width="match_parent"
@@ -153,23 +154,29 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/app_color_white"
                         app:layout_anchor="@id/rv_list"
                         app:layout_anchorGravity="bottom"
                         app:layout_behavior="@string/bottom_behavior">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:background="@color/app_color_divider" />
 
                         <TextView
                             android:id="@+id/tv_clean"
                             android:layout_width="match_parent"
                             android:layout_height="36dp"
                             android:layout_marginStart="15dp"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginTop="10dp"
                             android:layout_marginEnd="15dp"
                             android:layout_marginBottom="15dp"
                             android:background="@drawable/app_bg_r5"
-                            android:backgroundTint="@color/app_color_gray"
+                            android:backgroundTint="@color/app_color_blue"
                             android:gravity="center"
                             android:text="清空"
-                            android:textColor="@color/app_color_black"
+                            android:textColor="@color/app_color_white"
                             android:textSize="14sp" />
 
                     </FrameLayout>

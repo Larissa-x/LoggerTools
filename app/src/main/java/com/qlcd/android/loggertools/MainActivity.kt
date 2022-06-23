@@ -1,9 +1,7 @@
 package com.qlcd.android.loggertools
 
-import android.content.Intent
 import androidx.activity.viewModels
 import com.qlcd.android.loggertools.databinding.ActivityTestBinding
-import com.qlcd.loggertools.LoggerTools.context
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.manager.LoggerDataManager
 import com.qlcd.loggertools.ui.list.LogListActivity
@@ -57,8 +55,7 @@ class MainActivity : BaseActivity() {
         }
 
         _binding.btnHome.setOnClickListener {
-            startActivity(Intent(context, LogListActivity::class.java))
-
+            LogListActivity.start(this)
         }
     }
 
