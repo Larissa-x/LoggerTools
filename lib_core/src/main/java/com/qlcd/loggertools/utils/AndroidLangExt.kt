@@ -5,6 +5,9 @@ import android.util.TypedValue
 import android.view.View
 import androidx.lifecycle.*
 import com.qlcd.loggertools.LoggerTools.context
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 
 var Int.toDp: Int
     inline get() = toFloat().toDp
@@ -30,9 +33,7 @@ var Float.spToPx: Float
     inline get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, context.resources.displayMetrics)
     private set(_) {}
 
-/**
- * 点击节流
- */
+/**点击节流*/
 inline fun View.setThrottleClickListener(throttleTime: Long = 500, crossinline onClick: (v: View) -> Unit) {
     setOnClickListener(object : View.OnClickListener {
         private var prevClickTime = 0L
@@ -44,4 +45,19 @@ inline fun View.setThrottleClickListener(throttleTime: Long = 500, crossinline o
             }
         }
     })
+}
+
+/**判断字符串是否是json串*/
+fun isJson(content: String): Boolean {
+    return try {
+        if (content.contains("[") && content.contains("]")) {
+            JSONArray(content)
+            true
+        } else {
+            JSONObject(content)
+            true
+        }
+    } catch (e: JSONException) {
+        false
+    }
 }

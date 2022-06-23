@@ -20,19 +20,18 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.qlcd.loggertools.LoggerTools.context
 import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
-import com.qlcd.loggertools.database.entity.ApiEntity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityLogListBinding
 import com.qlcd.loggertools.ui.detail.LogDetailActivity
 import com.qlcd.loggertools.utils.setThrottleClickListener
-import com.qlcd.loggertools.widget.KEY_ENTITY
-import com.qlcd.loggertools.widget.STR_ERROR
-import com.qlcd.loggertools.widget.STR_JSON
+import com.qlcd.loggertools.widget.*
 import com.qlcd.loggertools.widget.dialog.BaseDialog
 import com.qlcd.loggertools.widget.dialog.DialogViewConverter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.*
 
 class LogListActivity : BaseActivity() {
@@ -219,24 +218,49 @@ class LogListActivity : BaseActivity() {
 private class LogHomeListAdapter :
     BaseQuickAdapter<LoggerEntity, BaseViewHolder>(R.layout.rv_item_log_list) {
     override fun convert(holder: BaseViewHolder, item: LoggerEntity) {
-        holder.setText(R.id.tv_level, item.level)
+        holder.setText(
+            R.id.tv_status,
+            if (parseCode(item.content.orEmpty()).isNotEmpty()) {
+                "code:${parseCode(item.content.orEmpty())}"
+            } else {
+                item.level
+            }
+        )
             .setTextColorRes(
-                R.id.tv_level, if (item.level.equals(STR_ERROR, true)) {
-                    R.color.app_color_red
+                R.id.tv_status, if (parseCode(item.content.orEmpty()).isNotEmpty()) {
+                    // 接口请求日志，成功时字体颜色为绿色，失败为红色
+                    if (parseCode(item.content.orEmpty()) == KEY_CODE_SUCCESS) {
+                        R.color.app_color_green
+                    } else {
+                        R.color.app_color_red
+                    }
                 } else {
-                    R.color.app_color_gray
+                    R.color.app_color_black
                 }
             )
-            .setText(R.id.tv_date, TimeUtils.date2String(Date(item.time!!)))
-        if (item.level.equals(STR_JSON, true) && item.content.orEmpty().startsWith("{")) {
-            holder.setText(
-                R.id.tv_content,
-                "code: ${ApiEntity().parseJson(item.content.orEmpty()).response.code}  path: ${
-                    ApiEntity().parseJson(item.content.orEmpty()).request.path
-                }"
-            )
-        } else {
-            holder.setText(R.id.tv_content, item.content)
+            .setText(R.id.tv_date, TimeUtils.date2String(item.time?.let { Date(it) }))
+            .setText(R.id.tv_content, parseContent(item.content.orEmpty()))
+    }
+
+    // 解析code
+    private fun parseCode(content: String): String {
+        return try {
+            val jsonObject = JSONObject(content)
+            val responseJson = jsonObject.optJSONObject(KEY_RESPONSE)
+            responseJson.optString(KEY_CODE)
+        } catch (e: JSONException) {
+            ""
+        }
+    }
+
+    // 解析内容
+    private fun parseContent(content: String): String {
+        return try {
+            val jsonObject = JSONObject(content)
+            val requestJson = jsonObject.optJSONObject(KEY_REQUEST)
+            "path:${requestJson.optString("path")}"
+        } catch (e: JSONException) {
+            content
         }
     }
 }

@@ -8,7 +8,8 @@
     <color name="app_color_black">#222222</color>
     <color name="app_color_gray">#f5f5f5</color>
     <color name="app_color_blue">#367DFF</color>
-    <color name="app_color_red">#F94048</color>
+    <color name="app_color_red">#FF0000</color>
+    <color name="app_color_green">#00FF00</color>
 
     <color name="default_text_color">#333333</color>
     <color name="default_key_color">#92278f</color>

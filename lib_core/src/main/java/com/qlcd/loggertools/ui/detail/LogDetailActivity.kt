@@ -1,6 +1,7 @@
 package com.qlcd.loggertools.ui.detail
 
 import android.annotation.SuppressLint
+import android.view.View
 import androidx.activity.viewModels
 import com.blankj.utilcode.util.TimeUtils
 import com.qlcd.loggertools.R
@@ -46,7 +47,8 @@ class LogDetailActivity : BaseActivity() {
                     _binding.rvJson.bindData(jsonObject)
                 } else {
                     _binding.tvTitle.text =
-                        "${TimeUtils.date2String(Date(logEntity?.time!!))}\n${logEntity?.content}"
+                        "${TimeUtils.date2String(Date(logEntity?.time!!))}\n\n${logEntity?.content}"
+                    _binding.rvJson.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
@@ -64,11 +66,11 @@ class LogDetailActivity : BaseActivity() {
     private fun formatTime(startTime: Long, response: JSONObject): String {
         val buffer = StringBuffer()
         buffer.append("开始时间：")
-        buffer.appendLine(TimeUtils.date2String(Date(startTime)))
+        buffer.appendLine(TimeUtils.date2String(Date(startTime), "yyyy-MM-dd HH:mm:ss:SSS"))
         buffer.append("响应时间：")
-        buffer.appendLine(TimeUtils.date2String(Date(startTime + response.optLong(KEY_RESPONSE_DURATION))))
+        buffer.appendLine(TimeUtils.date2String(Date(startTime + response.optLong(KEY_RESPONSE_DURATION)), "yyyy-MM-dd HH:mm:ss:SSS"))
         buffer.append("耗时：")
-        buffer.appendLine(response.optLong(KEY_RESPONSE_DURATION).toString())
+        buffer.append(response.optLong(KEY_RESPONSE_DURATION).toString() + "ms")
         return buffer.toString()
     }
 }

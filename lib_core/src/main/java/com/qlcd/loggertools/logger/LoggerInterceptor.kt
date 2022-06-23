@@ -44,17 +44,14 @@ class LoggerInterceptor : Interceptor {
         requestJson.put("host", request.url.host)
         requestJson.put("port", request.url.port)
         requestJson.put("path", request.url.encodedPath)
-        val jsonArray = JSONArray()
         val names = request.headers.names()
+        val headersJsonObject = JSONObject()
         names.forEach {
-            val jsonObject = JSONObject()
-            jsonObject.put("key", it)
-            jsonObject.put("value", request.headers[it])
-            jsonArray.put(jsonObject)
+            headersJsonObject.put(it, request.headers[it])
         }
 
         val dataJson = JSONArray()
-        requestJson.put("header", jsonArray)
+        requestJson.put("header", headersJsonObject)
         if (request.method.equals("post", true)) {
             if (request.body is FormBody) {
                 val formBody = request.body as FormBody

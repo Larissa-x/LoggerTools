@@ -1,23 +1,16 @@
 package com.qlcd.loggertools.logger
 
 import android.util.Log
-import com.qlcd.loggertools.database.dao.LoggerDao
-import com.qlcd.loggertools.database.entity.LoggerEntity
-import com.qlcd.loggertools.manager.DatabaseManager
+import com.qlcd.loggertools.LoggerTools
+import com.qlcd.loggertools.manager.LoggerDataManager
 import com.qlcd.loggertools.widget.STR_ERROR
 import com.qlcd.loggertools.widget.STR_JSON
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 
 /** * Created by Tony Shen on 2017/1/2. */
 object LogKit {
-    private var db: LoggerDao = DatabaseManager.db.loggerDao
-    private val logDataList = Collections.synchronizedList(mutableListOf<LoggerEntity>())
-
     enum class LogLevel {
         NONE {
             override val value: Int get() = -1
@@ -58,7 +51,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.e(TAG, String.format(s, msg))
-                insertToDatabase(STR_ERROR, msg)
+                LoggerDataManager.insertToDatabase(STR_ERROR, msg)
             }
         }
     }
@@ -105,24 +98,21 @@ object LogKit {
             if (j.startsWith("{")) {
                 val jsonObject = JSONObject(j)
                 var message = jsonObject.toString(LoggerPrinter.JSON_INDENT)
-                message = message.replace("\n".toRegex(), "\n║ ")
-                val s = getMethodNames()
-                println(String.format(s, message))
-                insertToDatabase(STR_JSON, json)
+                message = message.replace("\n".toRegex(), "\n│ ")
+                d(message)
+                LoggerDataManager.insertToDatabase(STR_JSON, json)
                 return
             }
             if (j.startsWith("[")) {
                 val jsonArray = JSONArray(j)
                 var message = jsonArray.toString(LoggerPrinter.JSON_INDENT)
-                message = message.replace("\n".toRegex(), "\n║ ")
-                val s = getMethodNames()
-                println(String.format(s, message))
-                insertToDatabase(STR_JSON, json)
+                message = message.replace("\n".toRegex(), "\n│ ")
+                d(message)
+                LoggerDataManager.insertToDatabase(STR_JSON, json)
                 return
             }
-            e("Invalid Json")
         } catch (e: JSONException) {
-            e("Invalid Json")
+            e(e.toString())
         }
     }
 
@@ -152,21 +142,5 @@ object LogKit {
             .append("%s").append("\r\n")
             .append(LoggerPrinter.BOTTOM_BORDER).append("\r\n")
         return builder.toString()
-    }
-
-    fun getLogData(): List<LoggerEntity> {
-        return logDataList
-    }
-
-    fun cleanData() {
-        logDataList.clear()
-    }
-
-    private fun insertToDatabase(level: String, content: String?) {
-        GlobalScope.launch {
-            val e = LoggerEntity(level = level, time = System.currentTimeMillis(), content = content)
-            logDataList.add(0, e)
-            db.insertLogger(e)
-        }
     }
 }

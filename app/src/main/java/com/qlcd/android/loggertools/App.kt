@@ -1,6 +1,11 @@
 package com.qlcd.android.loggertools
 
-import com.qlcd.loggertools.BaseApplication
+import android.app.Application
+import com.qlcd.loggertools.LoggerTools
 
-class App : BaseApplication() {
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        LoggerTools.init(this)
+    }
 }

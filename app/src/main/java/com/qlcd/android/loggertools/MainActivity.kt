@@ -7,6 +7,7 @@ import com.qlcd.android.loggertools.databinding.ActivityTestBinding
 import com.qlcd.loggertools.LoggerTools.context
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.logger.LogKit
+import com.qlcd.loggertools.manager.LoggerDataManager
 import com.qlcd.loggertools.ui.list.LogListActivity
 
 class MainActivity : BaseActivity() {
@@ -16,6 +17,7 @@ class MainActivity : BaseActivity() {
     override fun bindLayout(): Int {
         return R.layout.activity_test
     }
+
     override fun bindBaseViewModel() = _viewModel
     override fun bindViews() {
         _binding.viewModel = _viewModel
@@ -26,7 +28,7 @@ class MainActivity : BaseActivity() {
 
     }
 
-    private fun initEvent(){
+    private fun initEvent() {
         //LogKit.x 不管哪种类型的日志，都会插入到数据库中
         _binding.btnInsert.setOnClickListener {
             val hashMapOf = hashMapOf<String, Any>()
@@ -42,13 +44,19 @@ class MainActivity : BaseActivity() {
 
         }
 
+        var click = 0
         _binding.btnQuery.setOnClickListener {
+            click++
             //查询
-            _viewModel.requestQuery()
+            if (click % 2 == 0) {
+                _viewModel.requestQuery()
+            } else {
+                LoggerDataManager.insertToDatabase("debug", "日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容")
+            }
         }
 
         _binding.btnHome.setOnClickListener {
-            startActivity(Intent(context,LogListActivity::class.java))
+            startActivity(Intent(context, LogListActivity::class.java))
 
         }
     }

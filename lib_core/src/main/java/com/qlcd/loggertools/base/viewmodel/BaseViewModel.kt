@@ -6,10 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.qlcd.loggertools.base.view.ViewState
 import com.qlcd.loggertools.livedata.SingleLiveData
-import com.qlcd.loggertools.logger.LogKit
 
 
-abstract class BaseViewModel : ViewModel(), IViewModel{
+abstract class BaseViewModel : ViewModel(), IViewModel {
     //当前页面的状态
     val viewState: MutableLiveData<ViewState> = MutableLiveData(ViewState.NormalState)
 
@@ -37,13 +36,10 @@ abstract class BaseViewModel : ViewModel(), IViewModel{
 
     @Synchronized
     private fun setViewState(state: ViewState) {
-        LogKit.i("LoadingState---before--->$toLoadNum")
         if (state == ViewState.LoadingState) {
             toLoadNum = toLoadNum.inc()
-            LogKit.i("LoadingState---after--->$toLoadNum")
         } else if (toLoadNum > 0) {
             toLoadNum = toLoadNum.dec()
-            LogKit.i("LoadingState---after--->$toLoadNum")
             if (toLoadNum > 0) {
                 return
             }

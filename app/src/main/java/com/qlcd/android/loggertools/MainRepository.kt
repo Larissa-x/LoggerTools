@@ -45,6 +45,7 @@ class MainRepository {
             .url("http://39.107.85.70:8301/app/relation/follow")
             .post(body)
             .addHeader("version", "1.0.0")
+            .addHeader("os", "Android")
             .build()
         build.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {

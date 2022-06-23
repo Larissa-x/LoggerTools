@@ -6,8 +6,8 @@ import com.qlcd.loggertools.base.viewmodel.MutableBooleanLiveData
 import com.qlcd.loggertools.base.viewmodel.MutableStringLiveData
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.livedata.SingleLiveData
-import com.qlcd.loggertools.logger.LogKit
 import com.qlcd.loggertools.manager.DatabaseManager
+import com.qlcd.loggertools.manager.LoggerDataManager
 import kotlinx.coroutines.launch
 
 class LogListViewModel : BaseViewModel() {
@@ -54,7 +54,7 @@ class LogListViewModel : BaseViewModel() {
             }
         } else {
             //获取自启动数据
-            var logData = LogKit.getLogData()
+            var logData = LoggerDataManager.getCurrentLogData()
             logData = if (sortType == DESC) {
                 logData.sortedByDescending { it.time }
             } else {
@@ -66,6 +66,6 @@ class LogListViewModel : BaseViewModel() {
     }
 
     fun cleanData() {
-        LogKit.cleanData()
+        LoggerDataManager.cleanCurrentData()
     }
 }
