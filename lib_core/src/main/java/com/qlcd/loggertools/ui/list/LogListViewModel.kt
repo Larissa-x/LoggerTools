@@ -66,7 +66,6 @@ class LogListViewModel : BaseViewModel() {
     }
 
     fun getData(sortType: String) {
-        setLoading()
         if (isDateFilter.value) {
             //根据日期筛选数据
             viewModelScope.launch {
@@ -104,9 +103,59 @@ class LogListViewModel : BaseViewModel() {
             } else {
                 logData.reversed()
             }
-            loggerListLivedata.value = logData
+            if (prevLevel.contains("全部") && prevModule.contains("全部")) {
+                loggerListLivedata.value = logData
+                return
+            }
+            if (!prevModule.contains("全部") && !prevLevel.contains("全部")) {
+                var tempList = filterModuleOrLevel(1, prevModule, logData.toMutableList())
+                tempList = filterModuleOrLevel(2, prevLevel, tempList)
+                loggerListLivedata.value = tempList
+                return
+            }
+            if (!prevModule.contains("全部") && prevLevel.contains("全部")) {
+                var tempList = filterModuleOrLevel(1, prevModule, logData.toMutableList())
+                loggerListLivedata.value = tempList
+                return
+            }
+            if (!prevLevel.contains("全部") && prevModule.contains("全部")) {
+                var tempList = filterModuleOrLevel(2, prevLevel, logData.toMutableList())
+                loggerListLivedata.value = tempList
+            }
         }
-        setNormal()
+    }
+
+    /**
+     * 1    模块
+     * 2    等级
+     */
+    private fun filterModuleOrLevel(
+        type: Int,
+        tagList: MutableList<String>,
+        oldList: MutableList<LoggerEntity>,
+    ): MutableList<LoggerEntity> {
+        val mutableListOf = mutableListOf<LoggerEntity>()
+        when (type) {
+            1 -> {
+                oldList.forEach {
+                    tagList.forEach { str ->
+                        if (it.module == str) {
+                            mutableListOf.add(it)
+                        }
+                    }
+                }
+            }
+            2 -> {
+                oldList.forEach {
+                    tagList.forEach { str ->
+                        if (it.level == str) {
+                            mutableListOf.add(it)
+                        }
+                    }
+                }
+            }
+        }
+        return mutableListOf
     }
 
     fun cleanData() {
