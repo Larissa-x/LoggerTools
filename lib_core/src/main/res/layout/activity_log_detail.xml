@@ -51,24 +51,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/app_bg_r5"
-                    android:padding="10dp"
-                    android:text="时间类型"
-                    android:textColor="@color/app_color_black"
-                    android:textSize="14sp" />
-
                 <com.qlcd.loggertools.widget.JSONRecyclerView
                     android:id="@+id/rv_json"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
                     android:background="@drawable/app_bg_r5"
                     android:overScrollMode="never"
                     android:padding="10dp" />

@@ -3,6 +3,7 @@ package com.qlcd.android.loggertools
 import androidx.activity.viewModels
 import com.qlcd.android.loggertools.databinding.ActivityTestBinding
 import com.qlcd.loggertools.base.view.activity.BaseActivity
+import com.qlcd.loggertools.logger.LogKit
 import com.qlcd.loggertools.manager.LoggerDataManager
 import com.qlcd.loggertools.ui.list.LogListActivity
 
@@ -47,11 +48,15 @@ class MainActivity : BaseActivity() {
                 "     }"
         //LogKit.x 不管哪种类型的日志，都会插入到数据库中
         _binding.btnInsertJson.setOnClickListener {
-            LoggerDataManager.insertToDatabase("json", json)
+            LogKit.json(json)
         }
 
         _binding.btnInsertOther.setOnClickListener {
-            LoggerDataManager.insertToDatabase("debug", "日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容")
+            LogKit.d("日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容")
+            LogKit.i("日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容")
+            LogKit.e("日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容")
+            LogKit.w("日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容日志内容")
+
         }
 
         _binding.btnHome.setOnClickListener {

@@ -22,11 +22,11 @@ object LoggerDataManager {
         logDataList.clear()
     }
 
-    fun insertToDatabase(level: String, content: String?) {
+    fun insertToDatabase(entity: LoggerEntity) {
         GlobalScope.launch {
-            val e = LoggerEntity(level = level, time = System.currentTimeMillis(), content = content)
-            logDataList.add(0, e)
-            db.insertLogger(e)
+            entity.time = System.currentTimeMillis()
+            logDataList.add(0, entity)
+            db.insertLogger(entity)
         }
     }
 }

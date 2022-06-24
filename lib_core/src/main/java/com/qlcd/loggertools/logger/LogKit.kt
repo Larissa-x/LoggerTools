@@ -1,10 +1,9 @@
 package com.qlcd.loggertools.logger
 
 import android.util.Log
-import com.qlcd.loggertools.LoggerTools
+import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.manager.LoggerDataManager
-import com.qlcd.loggertools.widget.STR_ERROR
-import com.qlcd.loggertools.widget.STR_JSON
+import com.qlcd.loggertools.widget.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -34,6 +33,7 @@ object LogKit {
     private var TAG = "日志"
     var logLevel = LogLevel.DEBUG // 日志的等级，可以进行配置，最好在Application中进行全局的配置
 
+
     @JvmStatic
     fun init(clazz: Class<*>) {
         TAG = clazz.simpleName
@@ -51,7 +51,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.e(TAG, String.format(s, msg))
-                LoggerDataManager.insertToDatabase(STR_ERROR, msg)
+                insertToDb(msg!!, STR_ERROR, STR_MODULE_DEFAULT)
             }
         }
     }
@@ -62,6 +62,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.e(TAG, String.format(s, msg))
+                insertToDb(msg!!, STR_WARN, STR_MODULE_DEFAULT)
             }
         }
     }
@@ -72,6 +73,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.i(TAG, String.format(s, msg))
+                insertToDb(msg!!, STR_INFO, STR_MODULE_DEFAULT)
             }
         }
     }
@@ -82,6 +84,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.d(TAG, String.format(s, msg))
+                insertToDb(msg!!, STR_DEBUG, STR_MODULE_DEFAULT)
             }
         }
     }
@@ -99,21 +102,37 @@ object LogKit {
                 val jsonObject = JSONObject(j)
                 var message = jsonObject.toString(LoggerPrinter.JSON_INDENT)
                 message = message.replace("\n".toRegex(), "\n│ ")
-                d(message)
-                LoggerDataManager.insertToDatabase(STR_JSON, json)
+                val methodNames = getMethodNames()
+                Log.d(TAG, String.format(methodNames, message))
+                insertToDb(json!!, STR_JSON, STR_MODULE_HTTP)
                 return
             }
             if (j.startsWith("[")) {
                 val jsonArray = JSONArray(j)
                 var message = jsonArray.toString(LoggerPrinter.JSON_INDENT)
                 message = message.replace("\n".toRegex(), "\n│ ")
-                d(message)
-                LoggerDataManager.insertToDatabase(STR_JSON, json)
+                val methodNames = getMethodNames()
+                Log.d(TAG, String.format(methodNames, message))
+                insertToDb(json!!, STR_JSON, STR_MODULE_HTTP)
                 return
             }
         } catch (e: JSONException) {
             e(e.toString())
         }
+    }
+
+    private fun insertToDb(content: String, level: String, module: String) {
+        val sElements = Thread.currentThread().stackTrace
+        var stackOffset = LoggerPrinter.getStackOffset(sElements)
+        stackOffset++
+        val entity = LoggerEntity()
+        entity.content = content
+        entity.fileName = sElements[stackOffset].fileName
+        entity.funcName = sElements[stackOffset].methodName
+        entity.lineNumber = sElements[stackOffset].lineNumber
+        entity.level = level
+        entity.module = module
+        LoggerDataManager.insertToDatabase(entity)
     }
 
     private fun getMethodNames(): String {

@@ -12,5 +12,9 @@ data class LoggerEntity(
     var id: Long? = null,
     var time: Long? = null,
     var level: String = "",
+    var lineNumber: Int = 0,
+    var fileName: String = "",
+    var funcName: String = "",
+    var module: String = "debug",
     var content: String? = "",
 ) : Parcelable

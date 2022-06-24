@@ -32,6 +32,12 @@ interface LoggerDao {
     @Query(value = "SELECT DISTINCT level FROM logger_table")
     suspend fun queryAllLevel(): List<String>
 
+    /**
+     *  查询所有module去重
+     */
+    @Query(value = "SELECT DISTINCT module FROM logger_table")
+    suspend fun queryAllModule():List<String>
+
     @RawQuery
     suspend fun customQueryAllLoggers(query: SupportSQLiteQuery): List<LoggerEntity>
 
@@ -43,14 +49,13 @@ interface LoggerDao {
         level: String? = null,
         time: String? = null,//yyyy-MM-dd格式
         sort: String? = "DESC",
+        module:String? = null,
 //        page: Int = 1,//去掉分页逻辑
 //        pageNum: Int = 10,//去掉分页逻辑
     ): List<LoggerEntity> {
         val buffer = StringBuffer("SELECT * FROM logger_table")
 
-        if (!TextUtils.isEmpty(level) || !TextUtils.isEmpty(time)) {
-            buffer.append(" WHERE ")
-        }
+        buffer.append(" WHERE ")
 
         try {
             if (!TextUtils.isEmpty(time)) {
@@ -77,11 +82,19 @@ interface LoggerDao {
             LogKit.e(e.toString())
         }
 
-        if (!TextUtils.isEmpty(level)) {
+        if (level?.contains("全部") == false) {
             if (!buffer.endsWith(" WHERE ")) {
                 buffer.append(" and ")
             }
-            buffer.append("level='${level}'")
+            buffer.append("level in(${level})")
+        }
+
+        if (module?.contains("全部") == false) {
+            if (!buffer.endsWith(" WHERE ")) {
+                buffer.append(" and ")
+            }
+            buffer.append("module in(${module})")
+
         }
         buffer.append(" ORDER BY time $sort ")
 

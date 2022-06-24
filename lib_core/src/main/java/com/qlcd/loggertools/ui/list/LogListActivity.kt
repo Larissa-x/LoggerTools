@@ -10,7 +10,9 @@ import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.blankj.utilcode.util.*
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -33,6 +35,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.Exception
 import java.util.*
 
 class LogListActivity : BaseActivity() {
@@ -40,7 +43,8 @@ class LogListActivity : BaseActivity() {
     companion object {
         fun start(context: Activity) {
             context.startActivity(Intent(context, LogListActivity::class.java))
-            context.overridePendingTransition(R.anim.anim_activity_open_enter, R.anim.anim_activity_open_exit)
+            context.overridePendingTransition(R.anim.anim_activity_open_enter,
+                R.anim.anim_activity_open_exit)
         }
     }
 
@@ -51,6 +55,9 @@ class LogListActivity : BaseActivity() {
     private var searchJob: Job? = null
     private lateinit var _adapter: LogHomeListAdapter
     private val _filterListAdapter = FilterListAdapter()
+    private val _levelListAdapter = CheckBoxListAdapter()
+    private val _moduleListAdapter = CheckBoxListAdapter()
+
     override fun bindViews() {
         _binding.viewModel = _viewModel
     }
@@ -61,8 +68,10 @@ class LogListActivity : BaseActivity() {
 
         // 默认选择倒序
         _binding.rbDesc.isChecked = true
-        _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
         _viewModel.getData(getSortType())
+        _viewModel.getLevelList()
+        _viewModel.getModuleList()
+        _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
     }
 
     private fun initView() {
@@ -71,17 +80,89 @@ class LogListActivity : BaseActivity() {
             adapter = _filterListAdapter
         }
 
+        //列表展示的数据
         _binding.rvList.layoutManager = LinearLayoutManager(this)
         _adapter = LogHomeListAdapter()
         _binding.rvList.adapter = _adapter
-
         _adapter.setOnItemClickListener { _, _, position ->
             val loggerEntity = _adapter.data[position]
             val intent = Intent(context, LogDetailActivity::class.java)
             intent.putExtra(KEY_ENTITY, loggerEntity)
             startActivity(intent)
-            overridePendingTransition(R.anim.anim_activity_open_enter, R.anim.anim_activity_open_exit)
+            overridePendingTransition(R.anim.anim_activity_open_enter,
+                R.anim.anim_activity_open_exit)
         }
+
+        //日志等级筛选列表
+        _binding.rvLevel.layoutManager = GridLayoutManager(this, 3)
+        _binding.rvLevel.adapter = _levelListAdapter
+        _levelListAdapter.setOnItemClickListener { adapter, view, position ->
+            val item = _levelListAdapter.data[position]
+            //如果点击的是全部
+            if ("全部" == item.name) {
+                //当前状态是未选中、就把所有的都置为未选中状态，并且只选中全部
+                if (!item.isChecked) {
+                    _levelListAdapter.data.forEach {
+                        it.isChecked = false
+                    }
+                    item.isChecked = true
+                }
+            } else {
+                //如果当前点击的不是全部，就判断选中状态，如果已选中就置为未选中、如果未选中就置为已选中
+                item.isChecked = !item.isChecked
+                if (item.isChecked) {
+                    _levelListAdapter.data[0].isChecked = false
+                }
+            }
+            //用来标记当前列表除了全部以外，是否有选中的
+            var currentChecked = false
+            _levelListAdapter.data.forEach {
+                //遍历的数据、获取选中状态、如果没有选中的，就把全部选中
+                if (it.isChecked) {
+                    currentChecked = true
+                }
+            }
+            if (!currentChecked) {
+                _levelListAdapter.data[0].isChecked = true
+            }
+            _levelListAdapter.notifyDataSetChanged()
+        }
+
+        //日志模块筛选列表
+        _binding.rvModule.layoutManager = GridLayoutManager(this, 3)
+        _binding.rvModule.adapter = _moduleListAdapter
+        _moduleListAdapter.setOnItemClickListener { adapter, view, position ->
+            val item = _moduleListAdapter.data[position]
+            //如果点击的是全部
+            if ("全部" == item.name) {
+                //当前状态是未选中、就把所有的都置为未选中状态，并且只选中全部
+                if (!item.isChecked) {
+                    _moduleListAdapter.data.forEach {
+                        it.isChecked = false
+                    }
+                    item.isChecked = true
+                }
+            } else {
+                //如果当前点击的不是全部，就判断选中状态，如果已选中就置为未选中、如果未选中就置为已选中
+                item.isChecked = !item.isChecked
+                if (item.isChecked) {
+                    _moduleListAdapter.data[0].isChecked = false
+                }
+            }
+            //用来标记当前列表除了全部以外，是否有选中的
+            var currentChecked = false
+            _moduleListAdapter.data.forEach {
+                //遍历的数据、获取选中状态、如果没有选中的，就把全部选中
+                if (it.isChecked) {
+                    currentChecked = true
+                }
+            }
+            if (!currentChecked) {
+                _moduleListAdapter.data[0].isChecked = true
+            }
+            _moduleListAdapter.notifyDataSetChanged()
+        }
+
     }
 
     @SuppressLint("RtlHardcoded")
@@ -163,7 +244,9 @@ class LogListActivity : BaseActivity() {
                     delay(500)
                 }
                 _adapter.setNewInstance(
-                    _viewModel.loggerListLivedata.value?.filter { e -> e.content.orEmpty().contains(it, true) }?.toMutableList()
+                    _viewModel.loggerListLivedata.value?.filter { e ->
+                        e.content.orEmpty().contains(it, true)
+                    }?.toMutableList()
                 )
             }
         }
@@ -185,6 +268,14 @@ class LogListActivity : BaseActivity() {
         _viewModel.loggerListLivedata.observe(this) {
             _adapter.setNewInstance(it.toMutableList())
         }
+
+        _viewModel.allLevelLiveData.observe(this) {
+            _levelListAdapter.setNewInstance(it.toMutableList())
+        }
+
+        _viewModel.allModuleLiveData.observe(this) {
+            _moduleListAdapter.setNewInstance(it.toMutableList())
+        }
     }
 
     private fun getSortType(): String {
@@ -201,6 +292,16 @@ class LogListActivity : BaseActivity() {
         _binding.rbAsc.isChecked = _viewModel.prevSortType == LogListViewModel.ASC
         _viewModel.isDateFilter.value = _viewModel.prevDateFlag
         _viewModel.dateTextFilter.value = _viewModel.prevDateText
+
+        _moduleListAdapter.data.forEach {
+            it.isChecked = _viewModel.prevModule.contains(it.name)
+        }
+        _moduleListAdapter.notifyDataSetChanged()
+
+        _levelListAdapter.data.forEach {
+            it.isChecked = _viewModel.prevLevel.contains(it.name)
+        }
+        _levelListAdapter.notifyDataSetChanged()
     }
 
     private fun showDateSelectorDialog() {
@@ -214,6 +315,8 @@ class LogListActivity : BaseActivity() {
             .build()
             .show()
     }
+
+
 
     override fun onBackPressed() {
         if (_binding.drawLayout.isDrawerOpen(GravityCompat.END)) {
@@ -282,10 +385,25 @@ private class LogHomeListAdapter :
     }
 }
 
-private class FilterListAdapter : BaseQuickAdapter<String, BaseViewHolder>(R.layout.rv_item_filter) {
+private class FilterListAdapter :
+    BaseQuickAdapter<String, BaseViewHolder>(R.layout.rv_item_filter) {
 
     override fun convert(holder: BaseViewHolder, item: String) {
         (holder.itemView as TextView).text = item
+    }
+}
+
+private class CheckBoxListAdapter :
+    BaseQuickAdapter<FilterEntity, BaseViewHolder>(R.layout.item_level) {
+    override fun convert(holder: BaseViewHolder, item: FilterEntity) {
+        holder.setText(R.id.tv_tag, item.name)
+        if (item.isChecked) {
+            holder.setTextColorRes(R.id.tv_tag, R.color.app_color_white)
+            holder.setBackgroundResource(R.id.tv_tag, R.drawable.bg_sort_true)
+        } else {
+            holder.setTextColorRes(R.id.tv_tag, R.color.default_text_color)
+            holder.setBackgroundResource(R.id.tv_tag, R.drawable.bg_sort_false)
+        }
     }
 }
 
