@@ -48,7 +48,8 @@ class MainActivity : BaseActivity() {
                 "     }"
         //LogKit.x 不管哪种类型的日志，都会插入到数据库中
         _binding.btnInsertJson.setOnClickListener {
-            LogKit.json(json)
+            LogKit.success(json)
+            LogKit.fail(json)
         }
 
         _binding.btnInsertOther.setOnClickListener {
