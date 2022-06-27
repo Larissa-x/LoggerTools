@@ -25,7 +25,7 @@ class SingleLiveData<T> :MutableLiveData<T>() {
         value = value
     }
 
-    fun asynUpdate(){
+    fun asyncUpdate(){
         postValue(value)
     }
 
