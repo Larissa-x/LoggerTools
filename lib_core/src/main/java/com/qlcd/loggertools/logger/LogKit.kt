@@ -27,7 +27,7 @@ object LogKit {
         if (msg.toString().isNotEmpty()) {
             val s = getMethodNames()
             Log.e(TAG, String.format(s, msg))
-            insertToDb(msg!!, Level.Level_ERROR, module!!)
+            insertToDb(msg.orEmpty(), Level.Level_ERROR, module.orEmpty())
         }
     }
 
@@ -36,7 +36,7 @@ object LogKit {
         if (msg.toString().isNotEmpty()) {
             val s = getMethodNames()
             Log.e(TAG, String.format(s, msg))
-            insertToDb(msg!!, Level.Level_WARN, module!!)
+            insertToDb(msg.orEmpty(), Level.Level_WARN, module.orEmpty())
         }
     }
 
@@ -45,7 +45,7 @@ object LogKit {
         if (msg.toString().isNotEmpty()) {
             val s = getMethodNames()
             Log.i(TAG, String.format(s, msg))
-            insertToDb(msg!!, Level.Level_INFO, module!!)
+            insertToDb(msg.orEmpty(), Level.Level_INFO, module.orEmpty())
         }
     }
 
@@ -54,7 +54,7 @@ object LogKit {
         if (msg.toString().isNotEmpty()) {
             val s = getMethodNames()
             Log.d(TAG, String.format(s, msg))
-            insertToDb(msg!!, Level.Level_DEBUG, module!!)
+            insertToDb(msg.orEmpty(), Level.Level_DEBUG, module.orEmpty())
         }
     }
 
@@ -73,7 +73,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n│ ")
                 val methodNames = getMethodNames()
                 Log.d(TAG, String.format(methodNames, message))
-                insertToDb(json!!, level, module)
+                insertToDb(json.orEmpty(), level, module)
                 return
             }
             if (j.startsWith("[")) {
@@ -82,7 +82,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n│ ")
                 val methodNames = getMethodNames()
                 Log.d(TAG, String.format(methodNames, message))
-                insertToDb(json!!, level, module)
+                insertToDb(json.orEmpty(), level, module)
                 return
             }
         } catch (e: JSONException) {
@@ -93,14 +93,14 @@ object LogKit {
     @JvmStatic
     fun success(msg: String?, module: String? = Level.MODULE_HTTP) {
         if (msg.toString().isNotEmpty()) {
-            json(msg, Level.Level_SUCCESS, module!!)
+            json(msg, Level.Level_SUCCESS, module.orEmpty())
         }
     }
 
     @JvmStatic
-    fun fail(msg: String?, module: String? = "http") {
+    fun fail(msg: String?, module: String? = Level.MODULE_HTTP) {
         if (msg.toString().isNotEmpty()) {
-            json(msg, Level.Level_FAIL, module!!)
+            json(msg, Level.Level_FAIL, module.orEmpty())
         }
     }
 
