@@ -25,8 +25,13 @@ object LogKit {
         },
         DEBUG {
             override val value: Int get() = 3
+        },
+        SUCCESS {
+            override val value: Int get() = 4
+        },
+        FAIL {
+            override val value: Int get() = 5
         };
-
         abstract val value: Int
     }
 
@@ -51,7 +56,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.e(TAG, String.format(s, msg))
-                insertToDb(msg!!, STR_ERROR, STR_MODULE_DEFAULT)
+                insertToDb(msg!!, Level.Level_ERROR, Level.MODULE_DEFAULT)
             }
         }
     }
@@ -62,7 +67,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.e(TAG, String.format(s, msg))
-                insertToDb(msg!!, STR_WARN, STR_MODULE_DEFAULT)
+                insertToDb(msg!!, Level.Level_WARN, Level.MODULE_DEFAULT)
             }
         }
     }
@@ -73,7 +78,7 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.i(TAG, String.format(s, msg))
-                insertToDb(msg!!, STR_INFO, STR_MODULE_DEFAULT)
+                insertToDb(msg!!, Level.Level_INFO, Level.MODULE_DEFAULT)
             }
         }
     }
@@ -84,13 +89,13 @@ object LogKit {
             if (msg.toString().isNotEmpty()) {
                 val s = getMethodNames()
                 Log.d(TAG, String.format(s, msg))
-                insertToDb(msg!!, STR_DEBUG, STR_MODULE_DEFAULT)
+                insertToDb(msg!!, Level.Level_DEBUG, Level.MODULE_DEFAULT)
             }
         }
     }
 
     @JvmStatic
-    fun json(json: String?) {
+    fun json(json: String?, level: String) {
         var j = json
         if (j.toString().isEmpty()) {
             d("Empty/Null json liveInfoDetail")
@@ -104,7 +109,7 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n│ ")
                 val methodNames = getMethodNames()
                 Log.d(TAG, String.format(methodNames, message))
-                insertToDb(json!!, STR_JSON, STR_MODULE_HTTP)
+                insertToDb(json!!, level, Level.MODULE_HTTP)
                 return
             }
             if (j.startsWith("[")) {
@@ -113,11 +118,29 @@ object LogKit {
                 message = message.replace("\n".toRegex(), "\n│ ")
                 val methodNames = getMethodNames()
                 Log.d(TAG, String.format(methodNames, message))
-                insertToDb(json!!, STR_JSON, STR_MODULE_HTTP)
+                insertToDb(json!!, level, Level.MODULE_HTTP)
                 return
             }
         } catch (e: JSONException) {
             e(e.toString())
+        }
+    }
+
+    @JvmStatic
+    fun success(msg: String?) {
+        if (LogLevel.SUCCESS.value <= logLevel.value) {
+            if (msg.toString().isNotEmpty()) {
+                json(msg, Level.Level_SUCCESS)
+            }
+        }
+    }
+
+    @JvmStatic
+    fun fail(msg:String?){
+        if (LogLevel.FAIL.value <= logLevel.value) {
+            if (msg.toString().isNotEmpty()) {
+                json(msg, Level.Level_FAIL)
+            }
         }
     }
 
