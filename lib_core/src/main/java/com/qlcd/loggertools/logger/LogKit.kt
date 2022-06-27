@@ -3,42 +3,13 @@ package com.qlcd.loggertools.logger
 import android.util.Log
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.manager.LoggerDataManager
-import com.qlcd.loggertools.widget.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
 /** * Created by Tony Shen on 2017/1/2. */
 object LogKit {
-    enum class LogLevel {
-        NONE {
-            override val value: Int get() = -1
-        },
-        ERROR {
-            override val value: Int get() = 0
-        },
-        WARN {
-            override val value: Int get() = 1
-        },
-        INFO {
-            override val value: Int get() = 2
-        },
-        DEBUG {
-            override val value: Int get() = 3
-        },
-        SUCCESS {
-            override val value: Int get() = 4
-        },
-        FAIL {
-            override val value: Int get() = 5
-        };
-        abstract val value: Int
-    }
-
     private var TAG = "日志"
-    var logLevel = LogLevel.DEBUG // 日志的等级，可以进行配置，最好在Application中进行全局的配置
-
-
     @JvmStatic
     fun init(clazz: Class<*>) {
         TAG = clazz.simpleName
@@ -52,45 +23,37 @@ object LogKit {
 
     @JvmStatic
     fun e(msg: String?) {
-        if (LogLevel.ERROR.value <= logLevel.value) {
-            if (msg.toString().isNotEmpty()) {
-                val s = getMethodNames()
-                Log.e(TAG, String.format(s, msg))
-                insertToDb(msg!!, Level.Level_ERROR, Level.MODULE_DEFAULT)
-            }
+        if (msg.toString().isNotEmpty()) {
+            val s = getMethodNames()
+            Log.e(TAG, String.format(s, msg))
+            insertToDb(msg!!, Level.Level_ERROR, Level.MODULE_DEFAULT)
         }
     }
 
     @JvmStatic
     fun w(msg: String?) {
-        if (LogLevel.WARN.value <= logLevel.value) {
-            if (msg.toString().isNotEmpty()) {
-                val s = getMethodNames()
-                Log.e(TAG, String.format(s, msg))
-                insertToDb(msg!!, Level.Level_WARN, Level.MODULE_DEFAULT)
-            }
+        if (msg.toString().isNotEmpty()) {
+            val s = getMethodNames()
+            Log.e(TAG, String.format(s, msg))
+            insertToDb(msg!!, Level.Level_WARN, Level.MODULE_DEFAULT)
         }
     }
 
     @JvmStatic
     fun i(msg: String?) {
-        if (LogLevel.INFO.value <= logLevel.value) {
-            if (msg.toString().isNotEmpty()) {
-                val s = getMethodNames()
-                Log.i(TAG, String.format(s, msg))
-                insertToDb(msg!!, Level.Level_INFO, Level.MODULE_DEFAULT)
-            }
+        if (msg.toString().isNotEmpty()) {
+            val s = getMethodNames()
+            Log.i(TAG, String.format(s, msg))
+            insertToDb(msg!!, Level.Level_INFO, Level.MODULE_DEFAULT)
         }
     }
 
     @JvmStatic
     fun d(msg: String?) {
-        if (LogLevel.DEBUG.value <= logLevel.value) {
-            if (msg.toString().isNotEmpty()) {
-                val s = getMethodNames()
-                Log.d(TAG, String.format(s, msg))
-                insertToDb(msg!!, Level.Level_DEBUG, Level.MODULE_DEFAULT)
-            }
+        if (msg.toString().isNotEmpty()) {
+            val s = getMethodNames()
+            Log.d(TAG, String.format(s, msg))
+            insertToDb(msg!!, Level.Level_DEBUG, Level.MODULE_DEFAULT)
         }
     }
 
@@ -128,19 +91,15 @@ object LogKit {
 
     @JvmStatic
     fun success(msg: String?) {
-        if (LogLevel.SUCCESS.value <= logLevel.value) {
-            if (msg.toString().isNotEmpty()) {
-                json(msg, Level.Level_SUCCESS)
-            }
+        if (msg.toString().isNotEmpty()) {
+            json(msg, Level.Level_SUCCESS)
         }
     }
 
     @JvmStatic
     fun fail(msg:String?){
-        if (LogLevel.FAIL.value <= logLevel.value) {
-            if (msg.toString().isNotEmpty()) {
-                json(msg, Level.Level_FAIL)
-            }
+        if (msg.toString().isNotEmpty()) {
+            json(msg, Level.Level_FAIL)
         }
     }
 

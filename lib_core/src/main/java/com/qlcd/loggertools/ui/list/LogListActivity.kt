@@ -197,6 +197,10 @@ class LogListActivity : BaseActivity() {
             _viewModel.prevDateFlag = false
             _viewModel.prevDateText = ""
             _filterListAdapter.setNewInstance(_viewModel.getFilterLabel().toMutableList())
+            _viewModel.prevModule = mutableListOf("全部")
+            _viewModel.prevLevel = mutableListOf("全部")
+            _viewModel.getLevelList()
+            _viewModel.getModuleList()
             _viewModel.getData(getSortType())
         }
 
