@@ -12,7 +12,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.blankj.utilcode.util.*
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -25,6 +24,7 @@ import com.qlcd.loggertools.R
 import com.qlcd.loggertools.base.view.activity.BaseActivity
 import com.qlcd.loggertools.database.entity.LoggerEntity
 import com.qlcd.loggertools.databinding.ActivityLogListBinding
+import com.qlcd.loggertools.logger.Level
 import com.qlcd.loggertools.ui.detail.LogDetailActivity
 import com.qlcd.loggertools.utils.setThrottleClickListener
 import com.qlcd.loggertools.widget.*
@@ -35,7 +35,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.Exception
 import java.util.*
 
 class LogListActivity : BaseActivity() {
@@ -43,8 +42,10 @@ class LogListActivity : BaseActivity() {
     companion object {
         fun start(context: Activity) {
             context.startActivity(Intent(context, LogListActivity::class.java))
-            context.overridePendingTransition(R.anim.anim_activity_open_enter,
-                R.anim.anim_activity_open_exit)
+            context.overridePendingTransition(
+                R.anim.anim_activity_open_enter,
+                R.anim.anim_activity_open_exit
+            )
         }
     }
 
@@ -89,8 +90,10 @@ class LogListActivity : BaseActivity() {
             val intent = Intent(context, LogDetailActivity::class.java)
             intent.putExtra(KEY_ENTITY, loggerEntity)
             startActivity(intent)
-            overridePendingTransition(R.anim.anim_activity_open_enter,
-                R.anim.anim_activity_open_exit)
+            overridePendingTransition(
+                R.anim.anim_activity_open_enter,
+                R.anim.anim_activity_open_exit
+            )
         }
 
         //日志等级筛选列表
@@ -321,7 +324,6 @@ class LogListActivity : BaseActivity() {
     }
 
 
-
     override fun onBackPressed() {
         if (_binding.drawLayout.isDrawerOpen(GravityCompat.END)) {
             _binding.drawLayout.closeDrawers()
@@ -343,15 +345,16 @@ private class LogHomeListAdapter :
             }
         )
             .setTextColorRes(
-                R.id.tv_status, if (parseCode(item.content.orEmpty()).isNotEmpty()) {
-                    // 接口请求日志，成功时字体颜色为绿色，失败为红色
-                    if (parseCode(item.content.orEmpty()) == KEY_CODE_SUCCESS) {
+                R.id.tv_status, when (item.level) {
+                    Level.Level_SUCCESS -> {
                         R.color.app_color_green
-                    } else {
+                    }
+                    Level.Level_FAIL -> {
                         R.color.app_color_red
                     }
-                } else {
-                    R.color.app_color_black
+                    else -> {
+                        R.color.app_color_black
+                    }
                 }
             )
             .setText(R.id.tv_date, TimeUtils.date2String(item.time?.let { Date(it) }))
