@@ -240,7 +240,9 @@ class JSONViewAdapter(private val context: Context) :
     ) =
         with(value) {
             if (expandedFlag) {
-                performFirstExpand(itemView, value, appendComma, hierarchy + 1)
+                itemView.showIcon(false)
+                append("{")
+                handleHierarchyUI(itemView, value, appendComma, hierarchy + 1)
             } else {
                 itemView.showIcon(true)
                 append("Object{...}")
@@ -279,7 +281,9 @@ class JSONViewAdapter(private val context: Context) :
     ) =
         with(value) {
             if (expandedFlag) {
-                performFirstExpand(itemView, value, appendComma, hierarchy + 1)
+                itemView.showIcon(false)
+                append("[")
+                handleHierarchyUI(itemView, value, appendComma, hierarchy + 1)
             } else {
                 itemView.showIcon(true)
                 append("Array[").append(value.length().toString()).append("]")
@@ -317,21 +321,14 @@ class JSONViewAdapter(private val context: Context) :
             )
         }
 
-    /**
-     * The first time the view corresponding to a JSONObject or JSONArray is expanded.
-     * 第一次展开JSONObject或者JSONArray对应的itemView。
-     */
-    private fun performFirstExpand(
+    /**处理层级视图*/
+    private fun handleHierarchyUI(
         itemView: JSONItemView,
         value: Any,
         appendComma: Boolean,
         hierarchy: Int
     ) {
         val isJsonObject = value is JSONObject
-
-        itemView.showIcon(false)
-        itemView.tag = itemView.getRightText()
-        itemView.showRight(if (isJsonObject) "{" else "[")
 
         // 展开该层级以下的视图
         val array: JSONArray? =
@@ -370,6 +367,25 @@ class JSONViewAdapter(private val context: Context) :
                     .append(if (appendComma) "," else "")
             )
         })
+    }
+
+    /**
+     * The first time the view corresponding to a JSONObject or JSONArray is expanded.
+     * 第一次展开JSONObject或者JSONArray对应的itemView。
+     */
+    private fun performFirstExpand(
+        itemView: JSONItemView,
+        value: Any,
+        appendComma: Boolean,
+        hierarchy: Int
+    ) {
+        val isJsonObject = value is JSONObject
+
+        itemView.showIcon(false)
+        itemView.showRight(if (isJsonObject) "{" else "[")
+
+        handleHierarchyUI(itemView, value, appendComma, hierarchy + 1)
+
         // 重绘itemView
         itemView.requestLayout()
         itemView.invalidate()
@@ -575,11 +591,12 @@ class JSONViewAdapter(private val context: Context) :
 
         // 判断是否展开
         private var isExpanded = expandedFlag
+        private val isJsonObject = value is JSONObject
 
         override fun onClick(v: View?) {
             // 如果itemView的子View数量是1，就证明这是第一次展开
             (itemView.childCount == 1)
-                .yes { performFirstExpand(itemView, value, appendComma, hierarchy + 1) }
+                .yes { performFirstExpand(itemView, value, appendComma, hierarchy) }
                 .otherwise { performClick() }
         }
 
@@ -589,9 +606,11 @@ class JSONViewAdapter(private val context: Context) :
          */
         private fun performClick() {
             itemView.showIcon(isExpanded)
-            val rightText = itemView.getRightText()
-            itemView.showRight(itemView.tag as CharSequence)
-            itemView.tag = rightText
+            if (isExpanded) {
+                itemView.showRight(if (isJsonObject) "Object{...}" else "Array[${(value as JSONArray).length()}]")
+            } else {
+                itemView.showRight(if (isJsonObject) "{" else "[")
+            }
             for (i in 1 until itemView.childCount) {
                 // 如果展开的话，就把子View都设成可见状态，否则就设为隐藏状态
                 itemView.getChildAt(i).visibility = if (isExpanded) View.GONE else View.VISIBLE
