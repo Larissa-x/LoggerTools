@@ -98,7 +98,7 @@ object LogKit {
     }
 
     @JvmStatic
-    fun fail(msg: String?, module: String? = "http") {
+    fun fail(msg: String?, module: String? = Level.MODULE_HTTP) {
         if (msg.toString().isNotEmpty()) {
             json(msg, Level.Level_FAIL, module!!)
         }
